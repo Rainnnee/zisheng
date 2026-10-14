@@ -1,0 +1,23 @@
+# Proposed pilot configuration. Values are intentionally unset until the
+# data domain and implementation have been chosen and validated.
+project: hanziflow
+status: proposed
+
+data:
+  domain: null # e.g. rendered fonts or isolated handwriting
+  character_manifest: metadata/characters.csv
+  image_size: null
+
+diffusion:
+  timesteps: null
+  beta_schedule: null
+
+training:
+  seed: null
+  batch_size: null
+  learning_rate: null
+  epochs: null
+
+evaluation:
+  checkpoint: null
+  sample_count_per_character: null

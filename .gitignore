@@ -1,0 +1,27 @@
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local configuration and operating-system files
+.env
+.env.*
+.DS_Store
+.idea/
+.vscode/
+
+# Data, checkpoints, logs, and run outputs are kept out of normal Git history.
+data/raw/
+data/processed/
+checkpoints/
+logs/
+results/runs/
+results/checkpoints/
