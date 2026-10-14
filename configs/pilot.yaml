@@ -1,6 +1,6 @@
 # Proposed pilot configuration. Values are intentionally unset until the
 # data domain and implementation have been chosen and validated.
-project: hanziflow
+project: zisheng
 status: proposed
 
 data:

@@ -1,4 +1,4 @@
-"""HanziFlow research package scaffold.
+"""字生 (Zìshēng) research package scaffold.
 
 The project interfaces are placeholders until the data protocol and model are
 implemented and validated.

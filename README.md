@@ -1,8 +1,8 @@
-# HanziFlow
+# 字生 (Zìshēng)
 
-**From noise to characters: conditional diffusion, recognizability, and stroke complexity.**
+**Characters coming into being: conditional diffusion, recognizability, and stroke complexity.**
 
-HanziFlow is a STATS 100A Honors project studying whether a small class-conditional diffusion model can generate selected Chinese character images, and how corruption level and character stroke complexity relate to recognizability. The planned baseline uses Python and PyTorch; the project is currently at the planning and repository-scaffolding stage. No model has been trained and no results are available yet.
+字生 · ZiSheng is a STATS 100A Honors project studying whether a small class-conditional diffusion model can generate selected Chinese character images, and how corruption level and character stroke complexity relate to recognizability. The planned baseline uses Python and PyTorch; the project is currently at the planning and repository-scaffolding stage. No model has been trained and no results are available yet.
 
 ## Research questions
 
@@ -34,7 +34,7 @@ metadata/            Character manifest schema
 notebooks/           Focused probability and implementation demonstrations
 results/             Notes and, later, traceable experiment outputs
 scripts/             Future data and experiment entry points
-src/hanziflow/       Python package skeleton
+src/zisheng/       Python package skeleton
 ```
 
 The Python modules currently contain interface placeholders. They do not implement diffusion, training, sampling, or evaluation.

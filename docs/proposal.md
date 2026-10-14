@@ -2,7 +2,7 @@
 
 ## Working title
 
-HanziFlow: From Noise to Chinese Characters
+字生 (Zìshēng): From Noise to Chinese Characters
 
 ## Research question
 
