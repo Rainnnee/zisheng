@@ -1,0 +1,2 @@
+# Generated faculty brief; preserve PDF bytes without text normalization.
+*.pdf binary

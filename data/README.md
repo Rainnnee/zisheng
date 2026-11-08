@@ -1,9 +1,7 @@
 # Data
 
-This directory contains data instructions only. Raw and processed data are ignored by Git; see `.gitignore`.
+The first demo uses synthetic font renderings rather than a downloaded handwriting dataset. On first run, the package downloads two Noto CJK Simplified Chinese fonts and their license texts into `data/fonts/`. The font binaries and license files are ignored by Git.
 
-Before acquisition, document each source, release, license or use condition, download date, checksum, and required attribution. Keep restricted data local. Do not publish raw handwriting archives, personal data, or font files unless their terms allow it.
+The renderer creates a balanced set for 山, 水, and 永. It saves the source versions, checksums, seed, image dimensions, and rendering ranges in the run's `dataset_manifest.json`. See [`docs/data-card.md`](../docs/data-card.md) for the source and limitations.
 
-For handwriting, preserve writer IDs and split by writer where the source supports it. For rendered fonts, track font family and base glyph identity. Augmented copies must retain the identity of their parent sample; they are not independent originals.
-
-No dataset has been downloaded or audited for this repository yet. See `metadata/characters.csv` for the planned character-manifest fields.
+The current split is for pipeline development only: all generated images are used for training, and no held-out-font evaluation is run. Font-rendered variants must not be described as independent handwriting examples. If handwriting is considered later, preserve writer IDs and split by writer wherever the source supports it.

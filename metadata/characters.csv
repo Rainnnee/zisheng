@@ -1,1 +1,13 @@
 character,unicode_codepoint,class_id,stroke_count,stroke_count_source,stroke_convention,complexity_band,source_coverage
+山,U+5C71,0,3,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",low,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+水,U+6C34,1,4,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",low,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+火,U+706B,2,4,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",low,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+心,U+5FC3,3,4,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",low,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+永,U+6C38,4,5,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",middle,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+安,U+5B89,5,6,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",middle,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+志,U+5FD7,6,7,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",middle,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+花,U+82B1,7,8,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",high,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+明,U+660E,8,8,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",high,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+和,U+548C,9,8,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",high,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+信,U+4FE1,10,9,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",high,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"
+笑,U+7B11,11,10,"Unicode 18.0.0 UAX #38, Unihan kTotalStrokes","Unihan IRGSources kTotalStrokes",high,"Noto Sans CJK SC Regular Sans2.004; Noto Serif CJK SC Regular Serif2.003"

@@ -1,0 +1,81 @@
+{
+  "dataset_type": "synthetic rendered-font pilot",
+  "seed": 42,
+  "image_size": 32,
+  "variants_per_character_per_font": 128,
+  "characters": [
+    {
+      "glyph": "山",
+      "class_id": 0,
+      "stroke_count": 3,
+      "gloss": "mountain"
+    },
+    {
+      "glyph": "水",
+      "class_id": 1,
+      "stroke_count": 4,
+      "gloss": "water"
+    },
+    {
+      "glyph": "永",
+      "class_id": 2,
+      "stroke_count": 5,
+      "gloss": "everlasting"
+    }
+  ],
+  "sample_count": 768,
+  "samples_per_class": {
+    "山": 256,
+    "水": 256,
+    "永": 256
+  },
+  "fonts": [
+    {
+      "family": "Noto Sans CJK SC Regular",
+      "release": "Sans2.004",
+      "filename": "NotoSansCJKsc-Regular.otf",
+      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+      "license": "SIL Open Font License 1.1",
+      "license_file": "Noto-Sans-CJK-LICENSE.txt",
+      "license_sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+      "license_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/LICENSE",
+      "source_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/Sans2.004/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf"
+    },
+    {
+      "family": "Noto Serif CJK SC Regular",
+      "release": "Serif2.003",
+      "filename": "NotoSerifCJKsc-Regular.otf",
+      "sha256": "2a2eae2628df83556c54018c41e20fa532c1b862c5256ae8b3f23feb918d12ca",
+      "license": "SIL Open Font License 1.1",
+      "license_file": "Noto-Serif-CJK-LICENSE.txt",
+      "license_sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+      "license_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Serif/LICENSE",
+      "source_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/Serif2.003/Serif/OTF/SimplifiedChinese/NotoSerifCJKsc-Regular.otf"
+    }
+  ],
+  "rendering": {
+    "background": "white",
+    "ink": "black",
+    "scale_range_px": [
+      24,
+      28
+    ],
+    "rotation_degrees": [
+      -5,
+      5
+    ],
+    "horizontal_vertical_shift_px": [
+      -2,
+      2
+    ],
+    "pixel_range": [
+      -1.0,
+      1.0
+    ]
+  },
+  "limitations": [
+    "Synthetic printed glyphs are not handwriting.",
+    "The pilot uses two font families and label-preserving image variation.",
+    "Font-rendered variants are not independent human-written examples."
+  ]
+}

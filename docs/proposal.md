@@ -6,18 +6,23 @@
 
 ## Research question
 
-Can a small class-conditional diffusion model generate recognizable images of selected Chinese characters, and how do corruption level and stroke complexity relate to recognizability?
+Can a small class-conditional diffusion model generate recognizable images of selected Chinese characters, and how do corruption level and character stroke count relate to recognizability?
 
-## Planned scope
+## Proposed scope
 
-The baseline is a small Python/PyTorch image-generation study with a carefully documented character subset, a forward Gaussian corruption process, a conditioned denoiser, reverse sampling, and a fixed evaluation protocol. Printed-font rendering is the controlled prototype. Handwriting is a possible main domain if access, parsing, writer-level splits, coverage, and use conditions are verified promptly.
+The project uses Python and PyTorch to study a carefully documented character set. The first runnable pilot uses a controlled printed-font domain, a Gaussian forward process, a timestep- and class-conditioned denoiser, reverse sampling, and a fixed record of settings and outputs. Handwriting remains a possible later domain if data access, parsing, writer-level splits, coverage, and use terms can be verified in time.
 
-## Research questions
-
-1. How often do generated samples depict the requested class, and which visual errors occur?
-2. How does recognizability change with corruption level, and how well does denoising preserve character identity and image structure?
-3. How do the measured outcomes vary across the selected characters' stroke counts?
+The proposed questions are related but require different evaluation designs. The current demo implements conditional generation from noise. Corruption and restoration can be added only after the main project question and its evaluation are agreed upon.
 
 ## Current status
 
-Planning and repository scaffolding only. Data acquisition, implementation, training, and evaluation have not started in this repository. All design choices remain provisional until documented and checked against the course contract and data sources.
+The repository first established a three-class end-to-end demo. The expanded visual pilot now uses 12 characters with Unicode stroke counts from 3 to 10, rendered at 48×48 from two openly licensed Simplified Chinese fonts. The new run uses 3,072 images and 8,000 optimizer updates; it remains a qualitative demonstration.
+
+This pilot demonstrates the implementation path and a wider range of shapes. It does not establish accuracy, generalization to new fonts, or a relationship between stroke count and recognizability. The number of classes per stroke count is uneven, and character identity is tied to shape; a held-out evaluation protocol and a more controlled design are still needed before making those claims.
+
+## Next decisions
+
+1. Confirm with Professor Wu whether conditional generation should be the main study or whether restoration should replace it.
+2. Decide whether font-rendered images are a suitable main domain for the course project.
+3. Define a recognition measure and held-out font split before drawing conclusions from the expanded dataset.
+4. Check the course contract for the final report requirements and mathematical depth.

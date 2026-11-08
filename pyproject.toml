@@ -5,13 +5,26 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "zisheng"
 version = "0.1.0"
-description = "A research scaffold for conditional diffusion on Chinese character images."
+description = "A small conditional diffusion study for Chinese character images."
 readme = "README.md"
-requires-python = ">=3.11"
-dependencies = []
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "numpy>=1.26",
+    "Pillow>=10.0",
+    "torch>=2.6",
+]
+
+[project.scripts]
+zisheng = "zisheng.cli:main"
+
+[project.optional-dependencies]
+artifacts = ["Pillow", "reportlab"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+zisheng = ["web_ui.html"]

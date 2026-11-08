@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>字生 — pilot run</title>
+  <style>
+    :root { color-scheme: light; --ink: #23303c; --muted: #61717b; --accent: #14837f; --paper: #faf9f6; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { max-width: 1040px; margin: 0 auto; padding: 42px 24px 72px; }
+    h1 { margin-bottom: 0.2em; font-size: clamp(2rem, 6vw, 3.4rem); }
+    h2 { margin-top: 2.2em; }
+    .lead { max-width: 760px; color: var(--muted); }
+    .tag { display: inline-block; border-radius: 999px; background: #e3f2ef; color: #146d68; padding: 4px 11px; font-size: 0.86rem; }
+    section { margin-top: 28px; }
+    figure { margin: 14px 0; padding: 16px; background: white; border: 1px solid #e2e2dc; border-radius: 14px; }
+    img { display: block; width: 100%; height: auto; border-radius: 8px; }
+    figcaption, .note { margin-top: 10px; color: var(--muted); font-size: 0.92rem; }
+    code { padding: 2px 5px; background: #eee; border-radius: 4px; }
+    footer { margin-top: 40px; border-top: 1px solid #deded8; padding-top: 16px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="tag">Runnable research pilot · mps</span>
+    <h1>字生: from noise to characters</h1>
+    <p class="lead">This run trains a small class-conditional diffusion model on rendered examples of 山 (3 strokes), 水 (4 strokes), 火 (4 strokes), 心 (4 strokes), 永 (5 strokes), 安 (6 strokes), 志 (7 strokes), 花 (8 strokes), 明 (8 strokes), 和 (8 strokes), 信 (9 strokes), 笑 (10 strokes). The samples below are model outputs from the saved checkpoint.</p>
+
+    <section>
+      <h2>Generated samples</h2>
+      <figure><img src="samples.png" alt="Generated character samples grouped by requested class"><figcaption>Each row is conditioned on one requested character. The grid is a qualitative pilot view; no recognition metric has been computed.</figcaption></figure>
+    </section>
+
+    <section>
+      <h2>Reverse process</h2>
+      <figure><img src="reverse_diffusion.gif" alt="Animation from Gaussian noise to generated characters"><figcaption>The animation shows selected states while the denoiser repeatedly predicts and removes noise.</figcaption></figure>
+    </section>
+
+    <section>
+      <h2>Training and data</h2>
+      <figure><img src="training_curve.png" alt="Training noise-prediction mean squared error"><figcaption>Training noise-prediction MSE is an optimization trace, not a validation score.</figcaption></figure>
+      <figure><img src="training_examples.png" alt="Examples of rendered training glyphs"><figcaption>Training images were rendered locally from Noto Sans CJK SC Regular, Noto Serif CJK SC Regular. The fonts are used under the SIL Open Font License 1.1; see the dataset manifest for source URLs and hashes.</figcaption></figure>
+      <p class="note">Configuration: 48×48 grayscale images; 1000-step linear beta schedule; 8,000 updates; seed 42.</p>
+      <p class="note"><a href="dataset_manifest.json">Dataset manifest</a> · <a href="sample_config.json">Sample configuration</a></p>
+    </section>
+
+    <footer>This is a synthetic printed-font pilot, not handwriting, a human-written dataset, or evidence that the model generalizes to unseen fonts. Review the dataset manifest and model card before interpreting the samples.</footer>
+  </main>
+</body>
+</html>

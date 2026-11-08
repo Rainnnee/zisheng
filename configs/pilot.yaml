@@ -1,23 +1,48 @@
-# Proposed pilot configuration. Values are intentionally unset until the
-# data domain and implementation have been chosen and validated.
+# Reproduction settings for the expanded visual class-conditional pilot.
+# Values describe the demo checkpoint; they are not the final research protocol.
 project: zisheng
-status: proposed
+status: qualitative-pilot
 
 data:
-  domain: null # e.g. rendered fonts or isolated handwriting
+  domain: synthetic-rendered-fonts
   character_manifest: metadata/characters.csv
-  image_size: null
+  image_size: 48
+  font_families: 2
+  variants_per_character_per_font: 128
+  samples_per_character: 256
+  character_classes: 12
+  stroke_count_range: [3, 10]
+  pixel_range: [-1, 1]
+  seed: 42
 
 diffusion:
-  timesteps: null
-  beta_schedule: null
+  method: ddpm
+  prediction_target: epsilon
+  timesteps: 1000
+  beta_schedule: linear
+  beta_start: 0.0001
+  beta_end: 0.02
+
+model:
+  architecture: compact-conditional-unet
+  class_conditioning: learned-character-embedding
+  timestep_conditioning: sinusoidal-embedding
 
 training:
-  seed: null
-  batch_size: null
-  learning_rate: null
-  epochs: null
+  seed: 42
+  device: mps
+  batch_size: 64
+  learning_rate: 0.0002
+  optimizer: AdamW
+  optimizer_updates: 8000
+  ema_decay: 0.995
+
+sampling:
+  seed: 43
+  samples_per_character: 4
 
 evaluation:
-  checkpoint: null
-  sample_count_per_character: null
+  status: qualitative-only
+  training_noise_mse_logged: true
+  held_out_font_recognition: false
+  human_or_ocr_recognition: false

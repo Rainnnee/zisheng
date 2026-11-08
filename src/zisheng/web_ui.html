@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ee">
+  <title>字生 — Local Diffusion Lab</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f6f4ee;
+      --surface: #fffefa;
+      --ink: #202d38;
+      --muted: #66757d;
+      --line: #dddcd5;
+      --teal: #197f79;
+      --teal-dark: #12645f;
+      --teal-pale: #e4f0ed;
+      --orange: #bd6847;
+      --shadow: 0 16px 46px rgba(41, 51, 49, .08);
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 7% -12%, rgba(222, 235, 229, .8), transparent 34rem),
+        var(--paper);
+      color: var(--ink);
+      font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, select, input { font: inherit; }
+    .page { max-width: 1240px; margin: 0 auto; padding: 28px 30px 54px; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 58px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: -.02em; }
+    .seal { width: 38px; height: 38px; border-radius: 13px; display: grid; place-items: center; color: white; background: var(--teal); font: 22px/1 "Songti SC", "Noto Serif CJK SC", serif; }
+    .local-tag { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid #c8ded8; border-radius: 999px; background: rgba(255,255,255,.62); color: var(--teal-dark); font-size: .82rem; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; }
+    .local-dot { width: 8px; height: 8px; border-radius: 50%; background: #44a38a; box-shadow: 0 0 0 3px #d8eee7; }
+    .hero { margin-bottom: 34px; max-width: 780px; }
+    .eyebrow { color: var(--teal); font-size: .82rem; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; }
+    h1 { margin: 9px 0 10px; font-size: clamp(2.5rem, 6vw, 4.3rem); line-height: 1.04; letter-spacing: -.055em; font-weight: 700; }
+    h1 .hanzi { font-family: "Songti SC", "Noto Serif CJK SC", serif; letter-spacing: -.08em; }
+    .subtitle { margin: 0; color: var(--muted); font-size: 1.12rem; max-width: 680px; }
+    .workspace { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 22px; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: 20px; background: rgba(255,254,250,.91); box-shadow: var(--shadow); }
+    .controls { padding: 23px; }
+    .panel-heading { margin: 0 0 4px; font-size: 1.08rem; letter-spacing: -.02em; }
+    .panel-subtitle { margin: 0 0 21px; color: var(--muted); font-size: .88rem; }
+    .field-label { display: block; margin: 20px 0 9px; color: #53616a; font-size: .76rem; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+    .character-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .character-option { width: 100%; min-height: 58px; display: flex; align-items: center; gap: 9px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 13px; background: white; color: var(--ink); text-align: left; cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
+    .character-option:hover { transform: translateY(-1px); border-color: #aacdc4; }
+    .character-option[aria-pressed="true"] { border-color: var(--teal); background: #f0f7f4; box-shadow: inset 0 0 0 1px var(--teal); }
+    .glyph { width: 34px; height: 38px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 9px; background: var(--teal-pale); color: var(--teal-dark); font: 25px/1 "Songti SC", "Noto Serif CJK SC", serif; }
+    .character-name { display: block; font-size: .82rem; line-height: 1.25; font-weight: 700; }
+    .character-meta { display: block; margin-top: 2px; color: var(--muted); font-size: .7rem; line-height: 1.2; }
+    .control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    select, input[type="number"] { width: 100%; height: 44px; padding: 0 11px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: white; color: var(--ink); }
+    select:focus, input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(25,127,121,.12); }
+    .seed-row { display: flex; gap: 8px; }
+    .seed-row input { min-width: 0; }
+    .small-button { padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: white; color: var(--ink); cursor: pointer; }
+    .primary-button { width: 100%; min-height: 48px; margin-top: 22px; padding: 11px 16px; border: 0; border-radius: 12px; background: var(--teal); color: white; font-weight: 720; cursor: pointer; box-shadow: 0 5px 12px rgba(25,127,121,.17); transition: background .15s, transform .15s; }
+    .primary-button:hover:not(:disabled) { background: var(--teal-dark); transform: translateY(-1px); }
+    .primary-button:disabled { opacity: .65; cursor: wait; }
+    .status-line { min-height: 25px; margin: 12px 0 0; color: var(--muted); font-size: .84rem; }
+    .output { overflow: hidden; }
+    .output-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; padding: 22px 25px 17px; border-bottom: 1px solid #e9e7e0; }
+    .output-title { margin: 0; font-size: 1.15rem; letter-spacing: -.02em; }
+    .output-description { margin: 3px 0 0; color: var(--muted); font-size: .86rem; }
+    .run-chip { flex: 0 0 auto; padding: 6px 10px; border-radius: 8px; background: #f0eee8; color: #5c6870; font-size: .79rem; font-variant-numeric: tabular-nums; }
+    .output-body { padding: 22px 25px 24px; }
+    .visual-card { padding: 14px; border: 1px solid #e4e2db; border-radius: 14px; background: white; min-height: 193px; }
+    .visual-card img { display: block; width: 100%; height: auto; border-radius: 8px; }
+    .sample-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 12px; }
+    .sample-card { min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); cursor: pointer; text-align: left; transition: border-color .15s, box-shadow .15s, transform .15s; }
+    .sample-card:hover { transform: translateY(-1px); border-color: #aacdc4; }
+    .sample-card[aria-pressed="true"] { border-color: var(--teal); box-shadow: inset 0 0 0 1px var(--teal); background: #f5faf7; }
+    .sample-card img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; image-rendering: pixelated; }
+    .sample-caption { display: block; padding: 7px 2px 1px; color: var(--muted); font-size: .8rem; font-weight: 650; }
+    #timeline-image { width: min(100%, 400px); margin-inline: auto; image-rendering: pixelated; }
+    .empty-state { min-height: 161px; display: grid; place-items: center; text-align: center; color: var(--muted); }
+    .empty-glyph { display: block; margin-bottom: 4px; color: #c7dad4; font: 52px/1.05 "Songti SC", "Noto Serif CJK SC", serif; }
+    .timeline { margin-top: 22px; }
+    .timeline-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 8px; }
+    .timeline-head strong { font-size: .9rem; }
+    .timeline-step { color: var(--teal-dark); font-size: .82rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+    input[type="range"] { width: 100%; accent-color: var(--teal); cursor: pointer; }
+    .timeline-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 5px; color: var(--muted); font-size: .79rem; }
+    .play-button { padding: 7px 11px; border: 1px solid #cbded8; border-radius: 9px; background: #f2f8f5; color: var(--teal-dark); font-size: .82rem; font-weight: 650; cursor: pointer; }
+    .explanation { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+    .note-card { padding: 15px; border: 1px solid #e8e6df; border-radius: 12px; background: #fbfaf6; }
+    .note-title { display: block; margin-bottom: 5px; font-size: .8rem; font-weight: 760; letter-spacing: .04em; }
+    .note-card p { margin: 0; color: var(--muted); font-size: .83rem; }
+    .footnote { margin: 18px 0 0; color: var(--muted); font-size: .78rem; }
+    .footnote strong { color: #515e66; }
+    .loading-dot { display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: var(--orange); animation: pulse 1s infinite; }
+    @keyframes pulse { 50% { opacity: .28; transform: scale(.82); } }
+    @media (max-width: 830px) { .page { padding: 20px 16px 40px; } header { margin-bottom: 38px; } .workspace { grid-template-columns: 1fr; } .controls { order: 1; } .output { order: 2; } }
+    @media (max-width: 520px) { .page { padding-inline: 12px; } .local-tag { font-size: .68rem; } .hero { margin-bottom: 22px; } .output-top { padding: 18px; } .output-body { padding: 15px; } .controls { padding: 18px; } .explanation { grid-template-columns: 1fr; } .visual-card { padding: 8px; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand"><span class="seal">字</span><span>ZiSheng / 字生</span></div>
+      <span class="local-tag"><span class="local-dot"></span> Running locally · private to this computer</span>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">STATS 100A Honors · diffusion pilot</div>
+      <h1>Characters, <span class="hanzi">from noise.</span></h1>
+      <p class="subtitle">Choose a character and watch the trained model turn random noise into an image. The preview updates with real states from the reverse process as it runs.</p>
+    </section>
+
+    <main class="workspace">
+      <section class="panel controls" aria-labelledby="controls-heading">
+        <h2 class="panel-heading" id="controls-heading">Set up a generation</h2>
+          <p class="panel-subtitle">The selected character conditions the model at every denoising step.</p>
+
+        <span class="field-label">Character class</span>
+        <div class="character-options" id="character-options" role="group" aria-label="Choose a character"></div>
+
+        <div class="control-row">
+          <label><span class="field-label">Samples</span>
+            <select id="count">
+              <option value="1">1 image</option>
+              <option value="2">2 images</option>
+              <option value="4" selected>4 images</option>
+              <option value="6">6 images</option>
+            </select>
+          </label>
+          <label><span class="field-label">Random seed</span>
+            <div class="seed-row"><input id="seed" type="number" min="0" max="2147483647" value="43"><button class="small-button" id="new-seed" type="button" title="Choose a new seed">↻</button></div>
+          </label>
+        </div>
+        <button class="primary-button" id="generate" type="button">Generate from noise <span aria-hidden="true">↗</span></button>
+        <p class="status-line" id="status" aria-live="polite">Loading the saved pilot model…</p>
+      </section>
+
+      <section class="panel output" aria-labelledby="output-heading">
+        <div class="output-top">
+          <div>
+            <h2 class="output-title" id="output-heading">Generated samples</h2>
+            <p class="output-description">Samples stay separate. Select one to follow its actual states through the reverse process.</p>
+          </div>
+          <span class="run-chip" id="run-chip">Waiting for model</span>
+        </div>
+        <div class="output-body">
+          <div class="visual-card">
+            <div class="empty-state" id="empty-state"><div><span class="empty-glyph">山</span><span>Samples will appear here after the reverse chain runs.</span></div></div>
+            <div class="sample-grid" id="samples-grid" aria-label="Generated samples" hidden></div>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-head"><strong>Reverse process</strong><span class="timeline-step" id="frame-label">Starting Gaussian noise</span></div>
+            <div class="visual-card">
+              <div class="empty-state" id="timeline-empty"><div><span class="empty-glyph">ε</span><span>The live reverse process will appear here while the model runs.</span></div></div>
+              <img id="timeline-image" alt="Selected intermediate state in the reverse diffusion process" hidden>
+            </div>
+            <input id="timeline-slider" type="range" min="0" max="4" step="1" value="0" aria-label="Scrub through reverse diffusion steps" disabled>
+            <div class="timeline-controls"><span>Start: random noise</span><button class="play-button" id="play" type="button" disabled>▶ Play at 30 fps</button><span>End: generated glyph</span></div>
+          </div>
+
+          <div class="explanation">
+            <div class="note-card"><span class="note-title">What the model predicts</span><p>The U-Net predicts a 48×48 noise field. At each step, the sampler uses it to update the pixel values toward the requested character.</p></div>
+            <div class="note-card"><span class="note-title">Why the stroke weight changes</span><p>The training fonts varied in size and line weight. A seed changes the initial and per-step noise, and the class label has no separate size or weight control.</p></div>
+            <div class="note-card"><span class="note-title">Current pilot</span><p id="pilot-summary">Loading checkpoint details…</p></div>
+            <div class="note-card"><span class="note-title">Image representation</span><p>Diffusion runs on a grayscale pixel array, not explicit pen strokes. The browser enlarges each independent sample for viewing.</p></div>
+          </div>
+          <p class="footnote"><strong>Scope:</strong> this is a synthetic font pilot. Samples are model outputs, not handwriting; the page does not calculate recognition accuracy or test unseen fonts.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    let characterButtons = [];
+    const characterOptions = document.getElementById("character-options");
+    const generateButton = document.getElementById("generate");
+    const statusLine = document.getElementById("status");
+    const samplesGrid = document.getElementById("samples-grid");
+    const emptyState = document.getElementById("empty-state");
+    const timelineImage = document.getElementById("timeline-image");
+    const timelineEmpty = document.getElementById("timeline-empty");
+    const timelineSlider = document.getElementById("timeline-slider");
+    const frameLabel = document.getElementById("frame-label");
+    const runChip = document.getElementById("run-chip");
+    const playButton = document.getElementById("play");
+    const pilotSummary = document.getElementById("pilot-summary");
+    const PLAYBACK_INTERVAL_MS = 1000 / 30;
+    let selectedCharacter = "";
+    let currentTrajectory = [];
+    let animationTimer = null;
+    let selectedSampleIndex = 0;
+    let sampleCards = [];
+    let sampleImages = [];
+    let currentFrameIndex = 0;
+
+    function buildCharacterOptions(characters) {
+      characterOptions.replaceChildren();
+      characterButtons = [];
+      characters.forEach((character, index) => {
+        const button = document.createElement("button");
+        button.className = "character-option";
+        button.type = "button";
+        button.dataset.character = character.glyph;
+        button.setAttribute("aria-pressed", index === 0 ? "true" : "false");
+
+        const glyph = document.createElement("span");
+        glyph.className = "glyph";
+        glyph.textContent = character.glyph;
+
+        const details = document.createElement("span");
+        const name = document.createElement("span");
+        name.className = "character-name";
+        name.textContent = `${character.glyph} · ${character.gloss}`;
+        const meta = document.createElement("span");
+        meta.className = "character-meta";
+        meta.textContent = `${character.stroke_count} strokes · class ${character.class_id}`;
+        details.append(name, meta);
+        button.append(glyph, details);
+        button.addEventListener("click", () => {
+          characterButtons.forEach((other) => other.setAttribute("aria-pressed", "false"));
+          button.setAttribute("aria-pressed", "true");
+          selectedCharacter = character.glyph;
+          statusLine.textContent = `Selected ${character.glyph}. Generate a fresh batch to update the samples.`;
+        });
+        characterOptions.append(button);
+        characterButtons.push(button);
+      });
+      selectedCharacter = characters[0]?.glyph || "";
+    }
+
+    function showFrame(index) {
+      if (!currentTrajectory.length) return;
+      const frame = currentTrajectory[index];
+      currentFrameIndex = index;
+      timelineImage.src = frame.images[selectedSampleIndex];
+      timelineImage.hidden = false;
+      timelineEmpty.hidden = true;
+      frameLabel.textContent = `Sample ${selectedSampleIndex + 1} · ${frame.label}`;
+      timelineSlider.value = String(index);
+    }
+
+    function buildSampleCards(count) {
+      samplesGrid.replaceChildren();
+      sampleCards = [];
+      sampleImages = [];
+      selectedSampleIndex = 0;
+      for (let index = 0; index < count; index += 1) {
+        const card = document.createElement("button");
+        card.className = "sample-card";
+        card.type = "button";
+        card.setAttribute("aria-pressed", index === 0 ? "true" : "false");
+        card.setAttribute("aria-label", `Focus sample ${index + 1} in the reverse process`);
+
+        const image = document.createElement("img");
+        image.className = "sample-glyph";
+        image.alt = `${selectedCharacter} sample ${index + 1}`;
+        image.hidden = true;
+
+        const caption = document.createElement("span");
+        caption.className = "sample-caption";
+        caption.textContent = `Sample ${index + 1}`;
+
+        card.append(image, caption);
+        card.addEventListener("click", () => {
+          stopAnimation();
+          selectedSampleIndex = index;
+          sampleCards.forEach((item, itemIndex) => {
+            item.setAttribute("aria-pressed", itemIndex === index ? "true" : "false");
+          });
+          if (currentTrajectory.length) showFrame(currentFrameIndex);
+        });
+        samplesGrid.append(card);
+        sampleCards.push(card);
+        sampleImages.push(image);
+      }
+    }
+
+    function stopAnimation() {
+      if (animationTimer !== null) window.clearInterval(animationTimer);
+      animationTimer = null;
+      playButton.textContent = "▶ Play at 30 fps";
+    }
+
+    async function consumeGenerationStream(response, onFrame) {
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "The model could not generate this batch.");
+      }
+      if (!response.body) throw new Error("This browser cannot display the live response stream.");
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let pending = "";
+      let completion = null;
+
+      function handleLine(line) {
+        if (!line.trim()) return;
+        const event = JSON.parse(line);
+        if (event.type === "frame") {
+          onFrame(event);
+        } else if (event.type === "complete") {
+          completion = event;
+        } else if (event.type === "error") {
+          throw new Error(event.error || "The model could not finish this batch.");
+        }
+      }
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (value) pending += decoder.decode(value, { stream: true });
+        if (done) pending += decoder.decode();
+        const lines = pending.split("\n");
+        pending = lines.pop();
+        lines.forEach(handleLine);
+        if (done) break;
+      }
+      if (pending.trim()) handleLine(pending);
+      if (!completion) throw new Error("The model stream ended before it returned the final image.");
+      return completion;
+    }
+
+    async function generate() {
+      stopAnimation();
+      currentTrajectory = [];
+      currentFrameIndex = 0;
+      timelineSlider.max = "0";
+      timelineSlider.value = "0";
+      timelineSlider.disabled = true;
+      playButton.disabled = true;
+      timelineImage.hidden = true;
+      timelineEmpty.hidden = false;
+      generateButton.disabled = true;
+      generateButton.textContent = "Running reverse chain…";
+      statusLine.innerHTML = '<span class="loading-dot"></span>Live diffusion: streaming actual states from the local model.';
+      runChip.textContent = "Model running";
+      const payload = {
+        character: selectedCharacter,
+        count: Number(document.getElementById("count").value),
+        seed: Number(document.getElementById("seed").value),
+      };
+      buildSampleCards(payload.count);
+      try {
+        const response = await fetch("/api/stream", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const result = await consumeGenerationStream(response, (frame) => {
+          currentTrajectory.push(frame);
+          frame.images.forEach((imageData, index) => {
+            sampleImages[index].src = imageData;
+            sampleImages[index].hidden = false;
+          });
+          samplesGrid.hidden = false;
+          emptyState.hidden = true;
+          timelineSlider.max = String(currentTrajectory.length - 1);
+          timelineEmpty.hidden = true;
+          showFrame(currentTrajectory.length - 1);
+          runChip.textContent = `Live · ${currentTrajectory.length} frames`;
+          statusLine.textContent = `Live diffusion · x${frame.remaining_steps} · ${currentTrajectory.length} actual states captured.`;
+        });
+
+        timelineSlider.max = String(currentTrajectory.length - 1);
+        timelineSlider.disabled = false;
+        playButton.disabled = false;
+        showFrame(currentTrajectory.length - 1);
+        runChip.textContent = `${result.device} · ${result.elapsed_seconds}s`;
+        statusLine.textContent = `Generated ${result.sample_count} ${result.character} sample${result.sample_count === 1 ? "" : "s"} with seed ${result.seed}; streamed ${result.frame_count} actual states.`;
+      } catch (error) {
+        statusLine.textContent = error.message;
+        runChip.textContent = "Generation failed";
+      } finally {
+        generateButton.disabled = false;
+        generateButton.innerHTML = 'Generate from noise <span aria-hidden="true">↗</span>';
+      }
+    }
+
+    async function initialize() {
+      try {
+        const response = await fetch("/api/health");
+        const health = await response.json();
+        if (!response.ok || health.status !== "ready" || !health.characters.length) {
+          throw new Error("The saved model did not return its character list.");
+        }
+        buildCharacterOptions(health.characters);
+        const strokeCounts = health.characters.map((character) => character.stroke_count);
+        const lowestStrokeCount = Math.min(...strokeCounts);
+        const highestStrokeCount = Math.max(...strokeCounts);
+        pilotSummary.textContent = `${health.image_size}×${health.image_size} printed glyphs · ${health.characters.length} classes · ${lowestStrokeCount}–${highestStrokeCount} strokes · ${health.timesteps.toLocaleString()} reverse steps.`;
+        await generate();
+      } catch (error) {
+        statusLine.textContent = error.message;
+        runChip.textContent = "Model unavailable";
+        generateButton.disabled = true;
+      }
+    }
+
+    generateButton.addEventListener("click", generate);
+    document.getElementById("new-seed").addEventListener("click", () => {
+      document.getElementById("seed").value = String(Math.floor(Math.random() * 1000000));
+    });
+    timelineSlider.addEventListener("input", () => {
+      stopAnimation();
+      showFrame(Number(timelineSlider.value));
+    });
+    playButton.addEventListener("click", () => {
+      if (!currentTrajectory.length) return;
+      if (animationTimer !== null) {
+        stopAnimation();
+        return;
+      }
+      let index = 0;
+      showFrame(index);
+      playButton.textContent = "Ⅱ Pause animation";
+      animationTimer = window.setInterval(() => {
+        index += 1;
+        if (index >= currentTrajectory.length) {
+          stopAnimation();
+          return;
+        }
+        showFrame(index);
+      }, PLAYBACK_INTERVAL_MS);
+    });
+
+    // Load labels from the checkpoint so older and expanded models share this page.
+    window.addEventListener("load", initialize);
+  </script>
+</body>
+</html>

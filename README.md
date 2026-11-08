@@ -1,67 +1,109 @@
 # 字生 (Zìshēng)
 
-**Characters coming into being: conditional diffusion, recognizability, and stroke complexity.**
+字生 is a STATS 100A Honors project on class-conditional diffusion for Chinese character images. Its current visual pilot trains a DDPM on rendered font glyphs and includes a saved checkpoint, a local interactive sampler, and a static sample gallery.
 
-字生 · ZiSheng is a STATS 100A Honors project studying whether a small class-conditional diffusion model can generate selected Chinese character images, and how corruption level and character stroke complexity relate to recognizability. The planned baseline uses Python and PyTorch; the project is currently at the planning and repository-scaffolding stage. No model has been trained and no results are available yet.
+> **Status: runnable visual pilot.** The model generates samples for 12 character labels. Results have been inspected visually; the project has not measured recognition accuracy or generalization to unseen fonts.
 
-## Research questions
+## Technologies
 
-1. How often do generated images depict the requested character, and what errors appear?
-2. As Gaussian corruption increases, how do recognizability and restoration change?
-3. How do these outcomes vary across selected characters with different stroke counts?
+- Python 3.12, PyTorch, NumPy, and Pillow.
+- Noto Sans CJK SC Regular and Noto Serif CJK SC Regular provide the training glyphs. Their versions, hashes, and SIL Open Font License 1.1 terms are recorded in each run manifest.
+- The saved run was trained on Apple MPS. The command line can also select CUDA or CPU.
 
-The study will begin with a small, controlled font-rendering prototype. Handwriting may become the main data domain if a suitable dataset can be acquired, parsed, split by writer, and used under its terms. The initial target is a modest set of characters; the final list and data source will be recorded before training.
+## Features
 
-## Project status
+- Generate 48×48 grayscale images for 山 (3 strokes); 水, 火, and 心 (4); 永 (5); 安 (6); 志 (7); 花, 明, and 和 (8); 信 (9); and 笑 (10).
+- Choose one character, a batch of one to six samples, and a random seed.
+- Watch the local page update with actual model states during sampling. It streams one state every 10 reverse steps, then lets you select a sample, scrub its path, or replay it at 30 frames per second.
+- Use the included checkpoint for generation without retraining. After Python dependencies are installed, the sampler runs locally without downloading fonts or making network requests.
 
-- [x] Research plan and experiment protocol drafted in the planning chat.
-- [x] Repository created and starter structure added.
-- [ ] Confirm the final project requirements and data domain.
-- [ ] Audit data sources, licenses, and character coverage.
-- [ ] Implement and validate the forward diffusion process.
-- [ ] Train a small conditional model and evaluate it with a fixed protocol.
-- [ ] Report results, limitations, and reproducibility details.
+## The process
 
-The checked items describe planning and setup only. They do not indicate that data acquisition, implementation, or training is complete.
+1. Render 256 variants of each character from two Simplified Chinese font families. The 3,072 grayscale images use small changes in size, line weight, position, and rotation.
+2. Apply a 1,000-step DDPM forward schedule with linear beta values from 0.0001 to 0.02.
+3. Train a compact U-Net to predict the added Gaussian noise, conditioned on both the timestep and character ID.
+4. Sample from Gaussian noise and apply the learned reverse process. The web page streams 101 states for the current 1,000-step schedule.
 
-## Repository map
+The recorded run used training seed 42 and 8,000 optimizer updates. Its training noise-prediction MSE reached 0.0132. This is the training objective, not a recognition score.
 
-```text
-configs/             Proposed experiment settings
-data/                Data acquisition notes; source images stay out of Git
-docs/                Research question, mathematics, data, model, and protocol notes
-metadata/            Character manifest schema
-notebooks/           Focused probability and implementation demonstrations
-results/             Notes and, later, traceable experiment outputs
-scripts/             Future data and experiment entry points
-src/zisheng/       Python package skeleton
-```
+## Preview
 
-The Python modules currently contain interface placeholders. They do not implement diffusion, training, sampling, or evaluation.
+The images and animation below display directly on the GitHub repository page. No installation is needed to view them.
 
-## Setup
+![Class-conditional samples from the expanded character set](demo/assets/expanded-12char-48px/samples.png)
 
-The package metadata targets Python 3.11 or newer. At this stage it has no runtime dependencies because the model and data pipeline have not been implemented.
+![Reverse diffusion animation from Gaussian noise to generated characters](demo/assets/expanded-12char-48px/reverse_diffusion.gif)
+
+For a larger static report, open `demo/assets/expanded-12char-48px/index.html` in a browser after cloning or downloading the repository. Its images are stored beside it, so the report works locally without starting the model server. The [training trace](demo/assets/expanded-12char-48px/training_curve.png), [training examples](demo/assets/expanded-12char-48px/training_examples.png), and [dataset manifest](demo/assets/expanded-12char-48px/dataset_manifest.json) are also available.
+
+## What the pilot shows
+
+The model represents each character as a grayscale pixel array. It does not generate pen-stroke paths or stroke order. The class label identifies the character but does not specify image size or line weight. Since those appearances vary in the training data, different seeds can produce different apparent sizes and thicknesses. Some generated outputs are malformed or too heavy.
+
+The character set spans 3–10 strokes, but counts are unevenly represented and each class has its own shape. The results do not establish a causal effect of stroke count, recognition accuracy, handwriting quality, or generalization to fonts the model has not seen. Stroke counts follow Unicode 18.0.0 Unihan `kTotalStrokes`; see [the data card](docs/data-card.md) for the full list and source.
+
+## Running the project
+
+### Open the saved model locally
+
+Use Python 3.12. Install the project and its dependencies once:
 
 ```bash
-python -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
-PyTorch and platform-specific dependencies will be added after benchmarking the available Mac and CUDA environments. No training command is available yet.
+Then launch the interactive page with the included checkpoint:
 
-## Data and responsible use
+```bash
+python -m zisheng web
+```
 
-See [data/README.md](data/README.md) before acquiring any data. Keep raw datasets, restricted samples, credentials, local machine paths, and large checkpoints out of Git. Preserve source attribution and license notices. A font-rendered glyph is a synthetic sample, not an independent handwriting example.
+The page opens at [http://127.0.0.1:8765](http://127.0.0.1:8765). Choose a character, set the sample count and seed, and press **Generate from noise**. Keep the terminal open while using the page; press `Ctrl+C` there to stop the local server. The checkpoint is at `demo/assets/expanded-12char-48px/zisheng-pilot.pt`.
 
-The proposed data and evaluation choices are provisional until the sources, terms, labels, and splits have been audited. Do not interpret placeholder configuration values or planned analyses as findings.
+To save a separate sample report from the checkpoint:
 
-## Reproducibility goals
+```bash
+python -m zisheng sample \
+  --checkpoint demo/assets/expanded-12char-48px/zisheng-pilot.pt \
+  --output results/runs/new-samples \
+  --open
+```
 
-Before reporting results, record the data manifest and split, configuration, random seeds, software and device details, checkpoint, raw metrics, and figure-generation steps. Keep failures and deviations in the research log. The experiment protocol and model card should describe limitations as well as successful examples.
+### Train a new model
+
+Training needs the Noto fonts. On the first run, the project downloads about 41 MB of font files and license texts into `data/fonts/`; the font files stay local and are ignored by Git.
+
+```bash
+python -m zisheng demo \
+  --output results/runs/expanded-12char-48px \
+  --steps 8000 \
+  --seed 42 \
+  --device auto \
+  --open
+```
+
+The run writes its checkpoint, font hashes, dataset manifest, training trace, samples, and HTML report to the selected output directory.
+
+## Project records
+
+- [Project proposal](docs/proposal.md)
+- [Diffusion mathematics and code map](docs/math.md)
+- [Data card](docs/data-card.md)
+- [Experiment protocol](docs/experiment-protocol.md)
+- [Model card](docs/model-card.md)
+- [Research log](docs/research-log.md)
+- [First faculty brief](docs/meetings/2026-10-26-first-faculty-brief.md) ([PDF](output/pdf/2026-10-26-first-faculty-brief.pdf))
+
+## Next work
+
+Before drawing conclusions about recognizability, define a fixed recognition measure and a held-out-font split. The character counts should also be balanced more carefully if stroke count is part of the analysis. To control apparent size or line weight, normalize glyph bounds or add those properties as explicit model conditions.
+
+## Video showcase
+
+A screen recording has not been made. The reverse-process GIF above shows selected generated states.
 
 ## License
 
-No project code license has been selected yet. Third-party fonts and datasets may have separate terms; review and preserve those terms before use or redistribution.
+No license has been selected for the project code or checkpoint. The Noto font files are not included; their separate SIL Open Font License terms are documented in the [data card](docs/data-card.md).

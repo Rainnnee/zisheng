@@ -1,7 +1,3 @@
-"""字生 (Zìshēng) research package scaffold.
-
-The project interfaces are placeholders until the data protocol and model are
-implemented and validated.
-"""
+"""字生 (Zìshēng): a small, reproducible conditional-diffusion pilot."""
 
 __version__ = "0.1.0"
