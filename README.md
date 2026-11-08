@@ -94,7 +94,7 @@ The run writes its checkpoint, font hashes, dataset manifest, training trace, sa
 - [Experiment protocol](docs/experiment-protocol.md)
 - [Model card](docs/model-card.md)
 - [Research log](docs/research-log.md)
-- [First faculty brief](docs/meetings/2026-10-26-first-faculty-brief.md) ([PDF](output/pdf/2026-10-26-first-faculty-brief.pdf))
+- [First faculty brief](docs/meetings/2026-10-26-first-faculty-brief.md)
 
 ## Next work
 
