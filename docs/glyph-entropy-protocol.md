@@ -35,4 +35,6 @@ S = (Dice(P_A, A) − Dice(P_A, B) + Dice(P_B, B) − Dice(P_B, A)) / 2
 
 Compute S at each SNR for both widths and both template baselines. Pair the two fonts by character, SNR, model seed, and noise draw index. Average noise draws and seeds within character, then weight characters equally. A fixed label-only prediction is exactly zero. The pre-evaluation prediction is that S at log₂ SNR 0 exceeds S at −5 for both widths. S measures source-mask agreement for these two renditions, including stroke position and weight. Gaussian nearest provides a training-template strategy that can also respond to the input. Use toy masks to check that identical predictions cancel and exact distinct reconstructions produce `1 − Dice(A,B)`.
 
+The report illustration uses the preselected character 明, width 32, training seed 101 and noise draw 0 at the two SNR endpoints. The figure is a visual example. The statistics use the complete panel.
+
 The analysis is conditional on this panel, split, architecture, and training budget. Treat the character as the unit for descriptive uncertainty. Reserve choices motivated by held-out scores for a clearly labeled exploratory analysis. Store schedule/seed, masks, row keys, code revision and checkpoint fingerprints so the result can be checked from original predictions.
