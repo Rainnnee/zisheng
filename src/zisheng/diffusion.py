@@ -63,17 +63,21 @@ class GaussianDiffusion(nn.Module):
         denoiser: nn.Module,
         clean_images: torch.Tensor,
         character_ids: torch.Tensor,
+        *,
+        timesteps: torch.Tensor | None = None,
+        noise: torch.Tensor | None = None,
     ) -> torch.Tensor:
-        """Train the network to recover the Gaussian noise added to x_0."""
+        """Predict added noise. Explicit draws let paired runs share a training stream."""
 
-        batch_size = clean_images.shape[0]
-        timesteps = torch.randint(
-            0, self.timesteps, (batch_size,), device=clean_images.device
-        )
-        actual_noise = torch.randn_like(clean_images)
-        noisy_images = self.q_sample(clean_images, timesteps, actual_noise)
+        if timesteps is None:
+            timesteps = torch.randint(
+                0, self.timesteps, (len(clean_images),), device=clean_images.device
+            )
+        if noise is None:
+            noise = torch.randn_like(clean_images)
+        noisy_images = self.q_sample(clean_images, timesteps, noise)
         predicted_noise = denoiser(noisy_images, timesteps, character_ids)
-        return F.mse_loss(predicted_noise, actual_noise)
+        return F.mse_loss(predicted_noise, noise)
 
     @torch.inference_mode()
     def sample(

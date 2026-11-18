@@ -1,0 +1,9 @@
+{
+  "cross_split_same_character_pairs": 264,
+  "exact_grayscale_duplicates": [],
+  "exact_foreground_duplicates": [],
+  "cmap_covered_pairs": 144,
+  "fallback_rasters": 0,
+  "empty_foreground_rasters": 0,
+  "ink_on_border_rasters": 0
+}
