@@ -2,7 +2,15 @@
 
 字生 is a STATS 100A Honors study of class-conditional diffusion for Chinese character images. It asks whether a small diffusion model can generate recognizable characters and how noise and stroke complexity relate to the result.
 
-**Current status:** a runnable visual pilot. The project trains on rendered print glyphs for 12 character labels and includes a checkpoint, a local interactive sampler, and a sample gallery. Recognition accuracy and performance on unseen fonts have not been measured.
+**Current status:** a completed held-out-font denoising study and a separate 12-character visual generation pilot. The study releases 24 characters rendered in six digital typefaces, four DDPM checkpoints, per-example scores, and a short paper with independently checked results.
+
+## Research study
+
+Does local edge entropy improve predictions of how well a diffusion model restores a glyph in an unseen font? The expanded model lowered held-out-character prediction error by **0.144 Dice points** on average. In the width comparison, width 32 scored **3.22 points higher** at the strongest noise level and **1.71 points lower** at the mildest. A crossed-font comparison quantifies how recovery follows its source when the correct character label is already known.
+
+[Short paper](report/glyph-entropy/paper.pdf) · [LaTeX](report/glyph-entropy/paper.tex) · [Data and split](data/study/) · [Models](models/glyph-entropy-v1/) · [Scores and audit](results/glyph-entropy-v1/) · [AI agent workflow](docs/agent-matrix.md)
+
+![Foreground Dice and crossed-font contrast across six noise levels](report/glyph-entropy/generated/curves.png)
 
 ## 🧰 Technologies
 
@@ -27,11 +35,10 @@ The font files are downloaded for training and are not stored in this repository
 
 The [static run report](demo/assets/expanded-12char-48px/index.html) and its images are also included for local viewing.
 
-### Planned
+### Further work
 
-- Evaluate character identity with a fixed recognition measure and a font family kept out of model training.
-- Compare multiple training seeds and report results by character.
-- Expand and balance the character set before studying stroke complexity.
+- Add a character-identity metric and evaluate the generation-from-noise task.
+- Vary character panels, test typefaces, and model widths to estimate where the observed patterns hold.
 
 ## 🔄 Development process
 
@@ -53,12 +60,26 @@ The written project records include the [proposal](docs/proposal.md), [diffusion
 
 ## 🌱 Future improvements
 
-- Lock an identity measure and a held-out-font split before drawing conclusions about recognizability. Keep all variants from a font on the same side of the split and report per-character results across multiple training seeds.
-- The current study has only two font families. Add more fonts and characters before estimating a relationship between stroke count and recognizability; character identity and shape are currently confounded with stroke count.
+- Use a separate labeled recognition benchmark for legibility. This study measures mask recovery on two held-out font families.
+- Compare more widths and training budgets before drawing a model-size scaling curve.
 - Normalize glyph bounds or add image size and line weight as explicit conditions if those properties need to be controlled.
 - Consider handwriting only after finding a suitable source with usable terms, sufficient character coverage, and a writer-level split.
 
 ## 🚦 How to run
+
+### Reproduce the paper's evaluation
+
+After installing the dependencies below, run from the repository root. The shipped data and weights make this a CPU reproduction.
+
+```bash
+python scripts/evaluate_glyph_entropy.py --split test --device cpu \
+  --checkpoint-dir models/glyph-entropy-v1 --output results/runs/glyph-entropy-reproduction
+python scripts/verify_glyph_entropy.py --data data/study \
+  --checkpoint-dir models/glyph-entropy-v1 --evaluation results/glyph-entropy-v1 \
+  --output results/runs/glyph-entropy-audit.json
+```
+
+To retrain the four research checkpoints, use `python scripts/train_glyph_entropy.py --device auto`. The [training configuration](configs/glyph_entropy.toml) defines the four runs. See the [paper build](report/glyph-entropy/) and [frozen protocol](docs/glyph-entropy-protocol.md) for the full reproduction procedure.
 
 ### Run the saved model locally
 
@@ -87,7 +108,7 @@ python -m zisheng sample \
   --open
 ```
 
-### Train a new model
+### Retrain the generation pilot
 
 Training downloads the Noto font files and license texts on the first run (about 41 MB). The font files stay local and are ignored by Git.
 
