@@ -2,7 +2,7 @@
 
 从两张「明」读懂 Gaussian noise、DDPM、字形熵和实验结果
 
-UCLA STATS 100A Honors · 对照 [英文短论文](paper.pdf) 和 [冻结的实验方案](../../docs/glyph-entropy-protocol.md)
+UCLA STATS 100A Honors · 对照 [英文项目说明](paper.pdf) 和 [冻结的实验方案](../../docs/glyph-entropy-protocol.md)
 
 ## 1. 先看图，同一个字可以有不同的正确答案
 

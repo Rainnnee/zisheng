@@ -1,8 +1,8 @@
-# Local Edge Entropy and Source Recovery in Chinese Glyph Denoising
+# Generating Chinese Characters from Gaussian Noise
 
-Short research report for UCLA STATS 100A Honors. [Read the paper](paper.pdf), [open the LaTeX source](paper.tex), or start with the [Chinese learning notes](learning-notes.zh-CN.md) for worked examples and a guide to the code. The report uses the verified [test artifacts](../../results/glyph-entropy-v1/) and the [frozen protocol](../../docs/glyph-entropy-protocol.md).
+A project write-up for UCLA STATS 100A Honors. It begins with [the original generation of 花](generated/pilot-hua.png) and uses [matched recoveries of 笑](generated/width-example.png) to show the two tested model widths. [Read the write-up](paper.pdf), [open the LaTeX source](paper.tex), or use the [Chinese learning notes](learning-notes.zh-CN.md) for worked examples and code. The analysis uses the verified [test artifacts](../../results/glyph-entropy-v1/) and the [frozen protocol](../../docs/glyph-entropy-protocol.md).
 
-To regenerate the figures and numbers from the repository root, install `.[artifacts]` and run `python scripts/render_glyph_entropy_report.py`. Build the paper with a standard LaTeX distribution and BibTeX:
+To regenerate the figures and numbers from the repository root, install `.[artifacts]` and run `python scripts/render_glyph_entropy_report.py`. Build the write-up with a standard LaTeX distribution and BibTeX.
 
 ```bash
 mkdir -p results/runs/glyph-entropy-paper

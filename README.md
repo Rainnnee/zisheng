@@ -2,13 +2,13 @@
 
 字生 is a STATS 100A Honors study of class-conditional diffusion for Chinese character images. It asks whether a small diffusion model can generate recognizable characters and how noise and stroke complexity relate to the result.
 
-**Current status:** a completed held-out-font denoising study and a separate 12-character visual generation pilot. The study releases 24 characters rendered in six digital typefaces, four DDPM checkpoints, per-example scores, and a short paper with independently checked results.
+**Current status:** a completed held-out-font denoising study and a separate 12-character visual generation pilot. The study releases 24 characters rendered in six digital typefaces, four DDPM checkpoints, per-example scores, and a project write-up with independently checked results.
 
 ## Research study
 
 A character can remain readable after its original stroke shapes have changed. We give the denoiser the right label and test whether it recovers those shapes from the noisy image. We also ask which glyphs are harder to recover and when extra model width helps. Local edge entropy lowered held-out-character prediction error by **0.144 Dice points** on average. Width 32 scored **3.22 points higher** at the strongest noise level and **1.71 points lower** at the mildest.
 
-[Short paper](report/glyph-entropy/paper.pdf) · [LaTeX](report/glyph-entropy/paper.tex) · [中文学习笔记](report/glyph-entropy/learning-notes.zh-CN.md) · [Data and split](data/study/) · [Models](models/glyph-entropy-v1/) · [Scores and audit](results/glyph-entropy-v1/) · [AI agent workflow](docs/agent-matrix.md)
+[Project write-up](report/glyph-entropy/paper.pdf) · [LaTeX](report/glyph-entropy/paper.tex) · [中文学习笔记](report/glyph-entropy/learning-notes.zh-CN.md) · [Data and split](data/study/) · [Models](models/glyph-entropy-v1/) · [Scores and audit](results/glyph-entropy-v1/) · [AI agent workflow](docs/agent-matrix.md)
 
 ![Foreground Dice and crossed-font contrast across six noise levels](report/glyph-entropy/generated/curves.png)
 

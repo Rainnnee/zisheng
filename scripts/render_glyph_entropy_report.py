@@ -12,6 +12,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image, ImageSequence
 
 
 METHODS = (
@@ -56,39 +57,86 @@ def draw_curves(summary, output):
     plt.close(fig)
 
 
-def draw_example(summary, manifest, replay, output):
-    class_id = next(row["class_id"] for row in manifest["characters"] if row["glyph"] == "明")
-    families = {row["font_id"]: row["family"] for row in manifest["fonts"]}
-    font_ids = summary["eval_font_ids"]
-    order = summary["replay"]["example_condition_order"]
-    wide = order.index({"method": "denoiser", "width": 32, "seed": 101})
-    label = order.index({"method": "label-only", "width": None, "seed": None})
-    clean = replay["clean_uint8"][:, class_id].astype(np.float32) / 127.5 - 1.0
-    noisy = replay["example_noisy"][:, :, class_id]
-    predictions = replay["example_predictions"][:, :, :, class_id]
-    images = (clean, noisy[0], predictions[wide, 0], noisy[-1], predictions[wide, -1], predictions[label, 0])
-    fig, axes = plt.subplots(2, 6, figsize=(7.25, 2.55))
+def draw_glyph_grid(images, titles, font_labels, noise_groups, path):
+    fig, axes = plt.subplots(2, len(titles), figsize=(7.25, 2.55))
     fig.subplots_adjust(left=.15, right=.99, top=.76, bottom=.05, wspace=.10, hspace=.13)
-    titles = ("Original", "Noisy input", "Recovered", "Noisy input", "Recovered", "Label only")
-    for c, (column, title) in enumerate(zip(images, titles)):
-        for f, glyph in enumerate(column):
-            axis = axes[f, c]
+    for column_index, (column, title) in enumerate(zip(images, titles, strict=True)):
+        for row_index, glyph in enumerate(column):
+            axis = axes[row_index, column_index]
             axis.imshow(glyph, cmap="gray", vmin=-1, vmax=1, interpolation="nearest")
             axis.set_xticks([])
             axis.set_yticks([])
             for spine in axis.spines.values():
                 spine.set_color("#B6BCC4")
-            if f == 0:
+            if row_index == 0:
                 axis.set_title(title, fontsize=8)
-            if c == 0:
-                axis.set_ylabel(families[font_ids[f]], rotation=0, va="center", ha="right",
+            if column_index == 0:
+                axis.set_ylabel(font_labels[row_index], rotation=0, va="center", ha="right",
                                 fontsize=8, labelpad=5)
-    for first, last, title in ((1, 2, "More noise (−5)"), (3, 4, "Less noise (0)")):
+    for first, last, title in noise_groups:
         left = axes[0, first].get_position().x0
         right = axes[0, last].get_position().x1
         fig.text((left + right) / 2, .965, title, ha="center", va="top",
                  fontsize=9, fontweight="bold")
-    fig.savefig(output / "illustration.png", dpi=240)
+    fig.savefig(path, dpi=240)
+    plt.close(fig)
+
+
+def example_arrays(summary, manifest, replay, glyph):
+    class_id = next(row["class_id"] for row in manifest["characters"] if row["glyph"] == glyph)
+    families = {row["font_id"]: row["family"] for row in manifest["fonts"]}
+    font_labels = [families[font_id] for font_id in summary["eval_font_ids"]]
+    clean = replay["clean_uint8"][:, class_id].astype(np.float32) / 127.5 - 1.0
+    noisy = replay["example_noisy"][:, :, class_id]
+    predictions = replay["example_predictions"][:, :, :, class_id]
+    return clean, noisy, predictions, font_labels
+
+
+def draw_example(summary, manifest, replay, output):
+    clean, noisy, predictions, labels = example_arrays(summary, manifest, replay, "明")
+    order = summary["replay"]["example_condition_order"]
+    wide = order.index({"method": "denoiser", "width": 32, "seed": 101})
+    label = order.index({"method": "label-only", "width": None, "seed": None})
+    images = (clean, noisy[0], predictions[wide, 0], noisy[-1], predictions[wide, -1], predictions[label, 0])
+    titles = ("Original", "Noisy input", "Recovered", "Noisy input", "Recovered", "Label only")
+    groups = ((1, 2, "More noise (−5)"), (3, 4, "Less noise (0)"))
+    draw_glyph_grid(images, titles, labels, groups, output / "illustration.png")
+
+
+def draw_width_example(summary, manifest, replay, output):
+    clean, noisy, predictions, labels = example_arrays(summary, manifest, replay, "笑")
+    order = summary["replay"]["example_condition_order"]
+    narrow = order.index({"method": "denoiser", "width": 16, "seed": 101})
+    wide = order.index({"method": "denoiser", "width": 32, "seed": 101})
+    images = (
+        clean, noisy[0], predictions[narrow, 0], predictions[wide, 0],
+        noisy[-1], predictions[narrow, -1], predictions[wide, -1],
+    )
+    titles = ("Original", "Noisy input", "Width 16", "Width 32", "Noisy input", "Width 16", "Width 32")
+    groups = ((1, 3, "More noise (−5)"), (4, 6, "Less noise (0)"))
+    draw_glyph_grid(images, titles, labels, groups, output / "width-example.png")
+
+
+def draw_pilot_chain(pilot, output):
+    config = json.loads((pilot / "sample_config.json").read_text(encoding="utf-8"))
+    row = next(i for i, item in enumerate(config["characters"]) if item["glyph"] == "花")
+    # First sample tile, using the committed GIF's contact-sheet layout.
+    left, top = 28 + 92 + 8, 28 + 58 + row * (76 + 42) + 8
+    glyph_box = (left, top, left + 60, top + 60)
+    with Image.open(pilot / "reverse_diffusion.gif") as gif:
+        frames = [np.asarray(frame.convert("L").crop(glyph_box))
+                  for frame in ImageSequence.Iterator(gif)]
+    titles = ("Gaussian noise", "250 reverse steps", "500 reverse steps", "750 reverse steps", "Final sample")
+    fig, axes = plt.subplots(1, len(titles), figsize=(7.25, 1.60))
+    fig.subplots_adjust(left=.01, right=.99, top=.80, bottom=.02, wspace=.14)
+    for axis, pixels, title in zip(axes, frames, titles, strict=True):
+        axis.imshow(pixels, cmap="gray", vmin=0, vmax=255, interpolation="nearest")
+        axis.set_title(title, fontsize=8)
+        axis.set_xticks([])
+        axis.set_yticks([])
+        for spine in axis.spines.values():
+            spine.set_color("#B6BCC4")
+    fig.savefig(output / "pilot-hua.png", dpi=240)
     plt.close(fig)
 
 
@@ -142,6 +190,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--evaluation", type=Path, default=Path("results/glyph-entropy-v1"))
     parser.add_argument("--manifest", type=Path, default=Path("data/study/manifest.json"))
+    parser.add_argument("--pilot", type=Path, default=Path("demo/assets/expanded-12char-48px"))
     parser.add_argument("--output", type=Path, default=Path("report/glyph-entropy/generated"))
     args = parser.parse_args()
     summary = json.loads((args.evaluation / "summary.json").read_text(encoding="utf-8"))
@@ -150,8 +199,10 @@ def main():
         parser.error("paper figures require the frozen two-font test evaluation")
     args.output.mkdir(parents=True, exist_ok=True)
     draw_curves(summary, args.output)
+    draw_pilot_chain(args.pilot, args.output)
     with np.load(args.evaluation / "replay.npz", allow_pickle=False) as replay:
         draw_example(summary, manifest, replay, args.output)
+        draw_width_example(summary, manifest, replay, args.output)
     write_tex(summary, manifest, args.output)
 
 
