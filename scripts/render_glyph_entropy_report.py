@@ -38,7 +38,7 @@ def draw_curves(summary, output):
             axis.plot(range(-5, 1), curve(rows, measure, method, width), label=label,
                       color=color, linestyle=style, marker=marker, markersize=3.7, linewidth=1.65)
     for axis, title, label in zip(
-        axes, ("A  Mask recovery", "B  Source preference"), ("Foreground Dice", "Crossed-font contrast S")
+        axes, ("A  Ink overlap", "B  Match to the source"), ("Foreground Dice", "Own-font advantage ($S$)")
     ):
         axis.set_title(title, loc="left", fontweight="bold", fontsize=10)
         axis.set_ylabel(label, fontsize=9)
@@ -67,9 +67,9 @@ def draw_example(summary, manifest, replay, output):
     noisy = replay["example_noisy"][:, :, class_id]
     predictions = replay["example_predictions"][:, :, :, class_id]
     images = (clean, noisy[0], predictions[wide, 0], noisy[-1], predictions[wide, -1], predictions[label, 0])
-    fig, axes = plt.subplots(2, 6, figsize=(7.25, 2.35))
-    fig.subplots_adjust(left=.15, right=.99, top=.83, bottom=.04, wspace=.10, hspace=.13)
-    titles = ("Clean", "Input (−5)", "Wide (−5)", "Input (0)", "Wide (0)", "Label only")
+    fig, axes = plt.subplots(2, 6, figsize=(7.25, 2.55))
+    fig.subplots_adjust(left=.15, right=.99, top=.76, bottom=.05, wspace=.10, hspace=.13)
+    titles = ("Original", "Noisy input", "Recovered", "Noisy input", "Recovered", "Label only")
     for c, (column, title) in enumerate(zip(images, titles)):
         for f, glyph in enumerate(column):
             axis = axes[f, c]
@@ -83,6 +83,11 @@ def draw_example(summary, manifest, replay, output):
             if c == 0:
                 axis.set_ylabel(families[font_ids[f]], rotation=0, va="center", ha="right",
                                 fontsize=8, labelpad=5)
+    for first, last, title in ((1, 2, "More noise (−5)"), (3, 4, "Less noise (0)")):
+        left = axes[0, first].get_position().x0
+        right = axes[0, last].get_position().x1
+        fig.text((left + right) / 2, .965, title, ha="center", va="top",
+                 fontsize=9, fontweight="bold")
     fig.savefig(output / "illustration.png", dpi=240)
     plt.close(fig)
 
