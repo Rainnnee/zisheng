@@ -1,0 +1,318 @@
+[
+  {
+    "file": "w16-s101.pt",
+    "sha256": "996db99288173c768c08deae71ca22849cfe36cb6634f9c644c4d8d6a382b1c6",
+    "config": {
+      "num_classes": 24,
+      "image_size": 48,
+      "device": "mps",
+      "dataset_sha256": "a0f84add514c1f9088c9648d369436b675d1badee4a263379255258d300693dc",
+      "augmented_sha256": "061afc68dcc426ffe79d46b2ffd2c0de97a89f3337dc666019a6a3bd6b8aae6b",
+      "train_fonts": [
+        "noto-sans-cjk-sc",
+        "zcool-xiaowei",
+        "ma-shan-zheng"
+      ],
+      "training_examples": 2376,
+      "training_steps": 4000,
+      "prediction_target": "epsilon",
+      "beta_schedule": "linear",
+      "python_version": "3.12.14",
+      "torch_version": "2.15.0",
+      "numpy_version": "2.5.4",
+      "pillow_version": "13.0.0",
+      "batch_size": 24,
+      "learning_rate": 0.0002,
+      "timesteps": 1000,
+      "beta_start": 0.0001,
+      "beta_end": 0.02,
+      "ema_decay": 0.995,
+      "augmentation_seed": 48019,
+      "variants_per_glyph": 32,
+      "base_channels": 16,
+      "seed": 101,
+      "index_seed": 10101,
+      "timestep_seed": 20101,
+      "noise_seed": 30101
+    },
+    "log": [
+      {
+        "update": 500,
+        "noise_mse": 0.1502991303578019,
+        "elapsed_s": 6.239680500002578
+      },
+      {
+        "update": 1000,
+        "noise_mse": 0.052158776108175514,
+        "elapsed_s": 12.3154782501515
+      },
+      {
+        "update": 1500,
+        "noise_mse": 0.043008978571742774,
+        "elapsed_s": 18.384205625159666
+      },
+      {
+        "update": 2000,
+        "noise_mse": 0.036882180286571385,
+        "elapsed_s": 24.422428833087906
+      },
+      {
+        "update": 2500,
+        "noise_mse": 0.035247237153351305,
+        "elapsed_s": 30.495589208090678
+      },
+      {
+        "update": 3000,
+        "noise_mse": 0.03181215000152588,
+        "elapsed_s": 36.58293441706337
+      },
+      {
+        "update": 3500,
+        "noise_mse": 0.03121404835395515,
+        "elapsed_s": 42.6650047081057
+      },
+      {
+        "update": 4000,
+        "noise_mse": 0.029546608993783592,
+        "elapsed_s": 48.75124733312987
+      }
+    ]
+  },
+  {
+    "file": "w32-s101.pt",
+    "sha256": "2cca4b0015ce7281c7d377c27247a448dca7c10e8fabc9254aeef762b8a17b0a",
+    "config": {
+      "num_classes": 24,
+      "image_size": 48,
+      "device": "mps",
+      "dataset_sha256": "a0f84add514c1f9088c9648d369436b675d1badee4a263379255258d300693dc",
+      "augmented_sha256": "061afc68dcc426ffe79d46b2ffd2c0de97a89f3337dc666019a6a3bd6b8aae6b",
+      "train_fonts": [
+        "noto-sans-cjk-sc",
+        "zcool-xiaowei",
+        "ma-shan-zheng"
+      ],
+      "training_examples": 2376,
+      "training_steps": 4000,
+      "prediction_target": "epsilon",
+      "beta_schedule": "linear",
+      "python_version": "3.12.14",
+      "torch_version": "2.15.0",
+      "numpy_version": "2.5.4",
+      "pillow_version": "13.0.0",
+      "batch_size": 24,
+      "learning_rate": 0.0002,
+      "timesteps": 1000,
+      "beta_start": 0.0001,
+      "beta_end": 0.02,
+      "ema_decay": 0.995,
+      "augmentation_seed": 48019,
+      "variants_per_glyph": 32,
+      "base_channels": 32,
+      "seed": 101,
+      "index_seed": 10101,
+      "timestep_seed": 20101,
+      "noise_seed": 30101
+    },
+    "log": [
+      {
+        "update": 500,
+        "noise_mse": 0.09285355172306299,
+        "elapsed_s": 9.271237999899313
+      },
+      {
+        "update": 1000,
+        "noise_mse": 0.03988788953982294,
+        "elapsed_s": 18.49105912493542
+      },
+      {
+        "update": 1500,
+        "noise_mse": 0.03381216061115265,
+        "elapsed_s": 27.71674062497914
+      },
+      {
+        "update": 2000,
+        "noise_mse": 0.029214840756729244,
+        "elapsed_s": 36.919917166931555
+      },
+      {
+        "update": 2500,
+        "noise_mse": 0.02780339380912483,
+        "elapsed_s": 46.131868625059724
+      },
+      {
+        "update": 3000,
+        "noise_mse": 0.024936379173770548,
+        "elapsed_s": 55.33889279188588
+      },
+      {
+        "update": 3500,
+        "noise_mse": 0.024259448353201152,
+        "elapsed_s": 64.58982350002043
+      },
+      {
+        "update": 4000,
+        "noise_mse": 0.022917773857712747,
+        "elapsed_s": 73.78798533394001
+      }
+    ]
+  },
+  {
+    "file": "w16-s202.pt",
+    "sha256": "54e72791705b87fb07fb75973284441a3e084e169cba8b955ff1ee784a2f51e1",
+    "config": {
+      "num_classes": 24,
+      "image_size": 48,
+      "device": "mps",
+      "dataset_sha256": "a0f84add514c1f9088c9648d369436b675d1badee4a263379255258d300693dc",
+      "augmented_sha256": "061afc68dcc426ffe79d46b2ffd2c0de97a89f3337dc666019a6a3bd6b8aae6b",
+      "train_fonts": [
+        "noto-sans-cjk-sc",
+        "zcool-xiaowei",
+        "ma-shan-zheng"
+      ],
+      "training_examples": 2376,
+      "training_steps": 4000,
+      "prediction_target": "epsilon",
+      "beta_schedule": "linear",
+      "python_version": "3.12.14",
+      "torch_version": "2.15.0",
+      "numpy_version": "2.5.4",
+      "pillow_version": "13.0.0",
+      "batch_size": 24,
+      "learning_rate": 0.0002,
+      "timesteps": 1000,
+      "beta_start": 0.0001,
+      "beta_end": 0.02,
+      "ema_decay": 0.995,
+      "augmentation_seed": 48019,
+      "variants_per_glyph": 32,
+      "base_channels": 16,
+      "seed": 202,
+      "index_seed": 10202,
+      "timestep_seed": 20202,
+      "noise_seed": 30202
+    },
+    "log": [
+      {
+        "update": 500,
+        "noise_mse": 0.1386087958589196,
+        "elapsed_s": 6.095510374987498
+      },
+      {
+        "update": 1000,
+        "noise_mse": 0.05044422683492303,
+        "elapsed_s": 12.189221999840811
+      },
+      {
+        "update": 1500,
+        "noise_mse": 0.04020979795977473,
+        "elapsed_s": 18.287271791836247
+      },
+      {
+        "update": 2000,
+        "noise_mse": 0.03712530129775405,
+        "elapsed_s": 24.374393083853647
+      },
+      {
+        "update": 2500,
+        "noise_mse": 0.03409802925214171,
+        "elapsed_s": 30.458669208921492
+      },
+      {
+        "update": 3000,
+        "noise_mse": 0.03207179800048471,
+        "elapsed_s": 36.55340329185128
+      },
+      {
+        "update": 3500,
+        "noise_mse": 0.03148602997139096,
+        "elapsed_s": 42.64899583393708
+      },
+      {
+        "update": 4000,
+        "noise_mse": 0.029436543215066193,
+        "elapsed_s": 48.73132862499915
+      }
+    ]
+  },
+  {
+    "file": "w32-s202.pt",
+    "sha256": "574438369dd0aaf0a103a72165ca1438d528b2dd2f3884021509803df9cc5f0d",
+    "config": {
+      "num_classes": 24,
+      "image_size": 48,
+      "device": "mps",
+      "dataset_sha256": "a0f84add514c1f9088c9648d369436b675d1badee4a263379255258d300693dc",
+      "augmented_sha256": "061afc68dcc426ffe79d46b2ffd2c0de97a89f3337dc666019a6a3bd6b8aae6b",
+      "train_fonts": [
+        "noto-sans-cjk-sc",
+        "zcool-xiaowei",
+        "ma-shan-zheng"
+      ],
+      "training_examples": 2376,
+      "training_steps": 4000,
+      "prediction_target": "epsilon",
+      "beta_schedule": "linear",
+      "python_version": "3.12.14",
+      "torch_version": "2.15.0",
+      "numpy_version": "2.5.4",
+      "pillow_version": "13.0.0",
+      "batch_size": 24,
+      "learning_rate": 0.0002,
+      "timesteps": 1000,
+      "beta_start": 0.0001,
+      "beta_end": 0.02,
+      "ema_decay": 0.995,
+      "augmentation_seed": 48019,
+      "variants_per_glyph": 32,
+      "base_channels": 32,
+      "seed": 202,
+      "index_seed": 10202,
+      "timestep_seed": 20202,
+      "noise_seed": 30202
+    },
+    "log": [
+      {
+        "update": 500,
+        "noise_mse": 0.09352018782496452,
+        "elapsed_s": 9.18955404101871
+      },
+      {
+        "update": 1000,
+        "noise_mse": 0.04143546945229173,
+        "elapsed_s": 18.383118540979922
+      },
+      {
+        "update": 1500,
+        "noise_mse": 0.03381524428538978,
+        "elapsed_s": 27.60088991606608
+      },
+      {
+        "update": 2000,
+        "noise_mse": 0.03131557443924248,
+        "elapsed_s": 36.79657829110511
+      },
+      {
+        "update": 2500,
+        "noise_mse": 0.028410112767480313,
+        "elapsed_s": 46.0152141249273
+      },
+      {
+        "update": 3000,
+        "noise_mse": 0.02638845288194716,
+        "elapsed_s": 55.39835779112764
+      },
+      {
+        "update": 3500,
+        "noise_mse": 0.02587908698245883,
+        "elapsed_s": 65.15378354093991
+      },
+      {
+        "update": 4000,
+        "noise_mse": 0.023656337393447757,
+        "elapsed_s": 75.22116012498736
+      }
+    ]
+  }
+]

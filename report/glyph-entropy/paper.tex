@@ -1,0 +1,106 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,graphicx,xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+\input{generated/numbers.tex}
+\input{generated/primary-rows.tex}
+
+\title{\vspace{-1em}\textbf{Local Edge Entropy and Source Recovery in Chinese Glyph Denoising}}
+\author{Rain Piao\\[-2pt]\small UCLA STATS 100A Honors}
+\date{November 19, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+I study how well a conditional diffusion model restores Chinese glyphs when it knows the character label. Across 24 characters in two held-out fonts, the recovered strokes follow their source more closely as noise decreases. Adding local edge entropy to stroke count, ink fraction, and perimeter complexity reduces prediction error from \(\MeanControl\) to \(\MeanExpanded\) Dice points. The wider model scores higher at the strongest noise. The narrower model scores higher at the mildest.
+\end{abstract}
+
+\section{Introduction}
+
+I began this project by generating Chinese characters from Gaussian noise. For restoration, I want to preserve the lettering of a particular image. Figure~\ref{fig:example} shows two renderings of \emph{ming} (\emph{bright}). I give both inputs the same label, then compare the recovered strokes to each original.
+
+Even within a stroke group, glyphs can differ in how they distribute ink. I test whether the variety of small edge patterns helps predict which glyphs are harder to recover. I compare two network widths at each noise level, giving both models the same training examples and number of updates.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.96\linewidth]{generated/illustration.png}
+\caption{The originals, noisy inputs, and one-step recoveries for two renderings of \emph{ming}. The last column uses only the label. This example was fixed before testing (width 32, training seed 101, noise draw 0).}
+\label{fig:example}
+\end{figure}
+
+\clearpage
+\section{Data and model}
+
+The experiment uses six characters at each of 4, 6, 8, and 10 strokes. I fit each glyph, a drawing of one character in one font, into a centered 40-pixel box on a 48-by-48 canvas. Noto Sans CJK SC, ZCOOL XiaoWei, and Ma Shan Zheng make up the training set. I use ZCOOL QingKe HuangYou for validation and reserve ZCOOL KuaiLe and Long Cang for testing. The split keeps all 24 labels in training and sets aside the two test fonts in full. I checked 264 same-character pairs across splits for duplicate gray images and ink masks.
+
+The clean renderings let me control the amount of noise in each input. I represent black by \(-1\) and white by \(+1\). At step \(t\), the clean image \(x_0\) is multiplied by \(\sqrt{a_t}\) and the noise by \(\sqrt{1-a_t}\), where \(a_t=\bar\alpha_t=\prod_{s=1}^t(1-\beta_s)\). The 1,000 values of \(\beta_s\) increase linearly from \(0.0001\) to \(0.02\).
+\begin{align}
+x_t &= \sqrt{a_t}\,x_0+\sqrt{1-a_t}\,\epsilon,
+   \qquad \epsilon\sim\mathcal N(0,I), \label{eq:noise}\\
+\widehat{x}_0 &= \frac{x_t-\sqrt{1-a_t}\,\widehat\epsilon}{\sqrt{a_t}}. \label{eq:recovery}
+\end{align}
+The noise \(\epsilon\) contains one independent standard normal draw per pixel. Since I know the noise I add, I can use it as the target for training. The network takes \(x_t\), \(t\), and the character label \(c\) and learns to minimize the mean squared error of its noise prediction \(\widehat\epsilon\) \cite{ho2020ddpm}. Equation~\ref{eq:recovery} turns that prediction into a clean-image estimate.
+
+The schedule's signal-to-noise ratio (SNR) is \(a_t/(1-a_t)\). The two settings shown in Figure~\ref{fig:example}, \(\log_2\mathrm{SNR}=-5\) and 0, give ratios near \(1:32\) and \(1:1\). Equation~\ref{eq:recovery} multiplies the noise prediction error by \(\sqrt{(1-a_t)/a_t}\), so an error of the same size has about \(5.7\) times the effect at \(-5\) as at 0.
+
+The best squared-error prediction is the conditional mean of the noise given \(x_t,t,c\). Substituting that mean into Equation~\ref{eq:recovery} gives the conditional mean of the clean image. When a stroke could plausibly land in several places, averaging can make the restored stroke look faint. The \href{https://github.com/Rainnnee/zisheng/tree/aff9ffd/demo/assets/expanded-12char-48px}{original demo} uses noise prediction in a 1,000-step reverse chain starting from random noise. Here I use a single estimate so I can compare it with the known original.
+
+The U-Net combines information about the whole glyph with local stroke detail. I vary its first layer's channel count from 16 to 32, giving 240,993 and 881,153 parameters. The widths share a bank of 2,376 training images created with small translations and rotations. Each runs for \(\TrainSteps\) updates at batch size 24 and two training seeds. Within each seed pair the models receive the same images, timesteps, and noise. I score the final exponential moving average of the weights on six noise levels, using the same 16 draws per character and test font across widths, seeds, and noise levels. Training ran on Apple MPS and scoring ran on CPU.
+
+\clearpage
+\section{Evaluation}
+
+The foreground Dice score measures how much ink the prediction puts in the right place. I mark pixels below the grayscale midpoint as ink and compare the predicted and original sets \(A\) and \(B\) using \(D(A,B)=2|A\cap B|/(|A|+|B|)\). If each set contains 10 pixels and 8 overlap, the score is \(0.8\). Two empty sets receive a score of 1.
+
+A fixed template can score well on strokes common to several fonts. To see how much overlap comes from the label alone, I average the three clean training glyphs of the given character. I also use a template baseline that looks at the input. It selects the training glyph \(T\) that minimizes \(\|x_t-\sqrt{a_t}T\|^2\). The Gaussian noise variance is the same for each candidate, so this picks the template that makes the observed image most likely.
+
+Because both test fonts contain the same characters, I can compare each prediction with both clean originals. Let \(A,B\) be the two targets and \(P_A,P_B\) the predictions from their respective noisy images. The source advantage \(S\) measures how much closer each prediction is to its own original.
+\[
+S=\tfrac12\bigl[D(P_A,A)-D(P_A,B)+D(P_B,B)-D(P_B,A)\bigr].
+\]
+A fixed prediction gives \(P_A=P_B\), so the two differences cancel. I expected \(S\) to be higher at the mildest noise level than at the strongest and gave each character equal weight.
+
+To predict which characters will have lower Dice scores, I measure their shape in the training fonts. Prior work has compared Chinese font generation by stroke count \cite{yang2024fontdiffuser} and used local entropy to choose Latin reference glyphs \cite{matsuo2026active}. Here I count \(2\times2\) windows along edges, keeping the 14 patterns with both ink and background. Let \(p_i\) be a pattern's frequency among those windows. Its distribution has entropy \(H=-\sum_i p_i\log_2p_i\) \cite{shannon1948}. One repeating pattern gives 0 bits. Two equally frequent patterns give 1 bit. I take the median across training fonts for \(H\), ink fraction, and perimeter complexity \(L^2/(4\pi A)\), where \(L\) is digital perimeter and \(A\) is ink area.
+
+For each test font and width, I average Dice within each character over noise levels, seeds, and draws. I hold one character out at a time and predict its score using the other 23. The first regression uses a separate intercept for each stroke group plus ink fraction and perimeter complexity. The second adds \(H\). Each ridge fit standardizes its numeric predictors using the 23 fit rows and adds the sum of squared slopes to the sum of squared errors. I average the drop in mean absolute prediction error (MAE) across the two fonts and widths.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Test font & Width & MAE without \(H\) & MAE with \(H\) & Drop in MAE \\
+\midrule
+\PrimaryRows
+\bottomrule
+\end{tabular}
+\caption{Leave-one-character-out prediction error. One Dice point equals \(0.01\) on the 0-to-1 scale. Positive values in the last column indicate lower error with entropy.}
+\label{tab:entropy}
+\end{table}
+
+\clearpage
+\section{Results and discussion}
+
+Adding entropy lowered average MAE from \(\MeanControl\) to \(\MeanExpanded\) Dice points, with a drop in all four settings (Table~\ref{tab:entropy}). Refitting after removing one character at a time gave gains of \(\DeleteLow\) to \(\DeleteHigh\) points. Entropy rankings also varied across fonts (Spearman \(\EntropyRankLow\) to \(\EntropyRankHigh\)). With a gain this small, the choice of characters and fonts matters.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.96\linewidth]{generated/curves.pdf}
+\caption{Moving right means less noise. The left panel measures ink overlap on the two test fonts. The right measures how strongly predictions favor their own source. Lines average over characters and model seeds as applicable.}
+\label{fig:curves}
+\end{figure}
+
+The label-only template shows how much overlap a common shape can earn. It averaged \(\DiceLabelLow\) Dice points while its source advantage \(S\) was zero. For the denoisers, as noise decreased, \(S\) rose from \(\SourceNarrowLow\) to \(\SourceNarrowHigh\) points at width 16 and from \(\SourceWideLow\) to \(\SourceWideHigh\) at width 32. The nearest template rose from \(\SourceNearestLow\) to \(\SourceNearestHigh\).
+
+Noise also changed the effect of model width. Wide minus narrow was \(\WidthLow\) Dice points at the strongest noise and \(\WidthHigh\) at the mildest. The overall average of \(\MeanWidthGain\) obscures that reversal. In a descriptive regression, one standard deviation of entropy corresponded to \(\WidthEntropySlope\) points in width gain after adjustment.
+
+The results describe synthetic Gaussian corruption, with 24 known labels, two test fonts, and two seeds per width. Legibility, real scans, and model-size scaling call for separate tests. The \href{https://github.com/Rainnnee/zisheng/tree/codex/glyph-entropy-study/report/glyph-entropy}{study folder} contains the code, data, audit, and learning notes.
+
+{\small
+\bibliographystyle{unsrt}
+\bibliography{references}
+}
+
+\end{document}

@@ -1,0 +1,210 @@
+{
+  "status": "PASS",
+  "split": "test",
+  "font_ids": [
+    "zcool-kuaile",
+    "long-cang"
+  ],
+  "cross_split_panel_pairs": 264,
+  "score_rows": 27648,
+  "neural_rows": 18432,
+  "baseline_rows": 9216,
+  "max_abs_dice_diff": 0.0,
+  "training_renders_checked": 72,
+  "statistics_absolute_tolerance": 3e-12,
+  "primary": {
+    "delta_mae": 0.0014405310102424407,
+    "delete_one_min": 3.9488264306195865e-05,
+    "delete_one_max": 0.0027107726616578337,
+    "conditions": [
+      {
+        "font_id": "zcool-kuaile",
+        "width": 16,
+        "mae_base": 0.016986499139368227,
+        "mae_entropy": 0.015216262952282414,
+        "delta_mae": 0.0017702361870858135
+      },
+      {
+        "font_id": "long-cang",
+        "width": 16,
+        "mae_base": 0.032696319871370484,
+        "mae_entropy": 0.029763019702450457,
+        "delta_mae": 0.002933300168920027
+      },
+      {
+        "font_id": "zcool-kuaile",
+        "width": 32,
+        "mae_base": 0.018958346275502466,
+        "mae_entropy": 0.018545796598079423,
+        "delta_mae": 0.0004125496774230429
+      },
+      {
+        "font_id": "long-cang",
+        "width": 32,
+        "mae_base": 0.03329258678774966,
+        "mae_entropy": 0.032646548780208784,
+        "delta_mae": 0.0006460380075408792
+      }
+    ]
+  },
+  "crossed_source": [
+    {
+      "method": "denoiser",
+      "width": 16,
+      "seed": null,
+      "mean_contrasts": [
+        0.20630951499434275,
+        0.2796848746383265,
+        0.35503165121621094,
+        0.4198822501925419,
+        0.47397460960496596,
+        0.5172203875903842
+      ],
+      "contrast_delta_0_minus_minus_5": 0.3109108725960415
+    },
+    {
+      "method": "denoiser",
+      "width": 32,
+      "seed": null,
+      "mean_contrasts": [
+        0.20904021567544254,
+        0.27888094767645144,
+        0.3474993516837152,
+        0.4061587299894588,
+        0.45506226351379386,
+        0.4967915161169554
+      ],
+      "contrast_delta_0_minus_minus_5": 0.28775130044151287
+    },
+    {
+      "method": "label-only",
+      "width": null,
+      "seed": null,
+      "mean_contrasts": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "contrast_delta_0_minus_minus_5": 0.0
+    },
+    {
+      "method": "gaussian-nearest",
+      "width": null,
+      "seed": null,
+      "mean_contrasts": [
+        0.10951932411770841,
+        0.12293074185455738,
+        0.13413120792209454,
+        0.14025124912025644,
+        0.14477764533659934,
+        0.1479805646956886
+      ],
+      "contrast_delta_0_minus_minus_5": 0.038461240577980185
+    }
+  ],
+  "paired_width": {
+    "mean_delta_dice": 0.005255136720937542,
+    "entropy_coefficient": 0.0010920386090739233,
+    "mean_delta_by_font_and_snr": [
+      {
+        "font_id": "zcool-kuaile",
+        "target_log2_snr": -5,
+        "mean_delta_dice": 0.018360567279416297
+      },
+      {
+        "font_id": "zcool-kuaile",
+        "target_log2_snr": -4,
+        "mean_delta_dice": 0.0115969195772797
+      },
+      {
+        "font_id": "zcool-kuaile",
+        "target_log2_snr": -3,
+        "mean_delta_dice": 0.0008057349817664633
+      },
+      {
+        "font_id": "zcool-kuaile",
+        "target_log2_snr": -2,
+        "mean_delta_dice": -0.00805227285200828
+      },
+      {
+        "font_id": "zcool-kuaile",
+        "target_log2_snr": -1,
+        "mean_delta_dice": -0.014797871938335264
+      },
+      {
+        "font_id": "zcool-kuaile",
+        "target_log2_snr": 0,
+        "mean_delta_dice": -0.017598137340875425
+      },
+      {
+        "font_id": "long-cang",
+        "target_log2_snr": -5,
+        "mean_delta_dice": 0.04603803879084205
+      },
+      {
+        "font_id": "long-cang",
+        "target_log2_snr": -4,
+        "mean_delta_dice": 0.03535835549355613
+      },
+      {
+        "font_id": "long-cang",
+        "target_log2_snr": -3,
+        "mean_delta_dice": 0.018101950215846298
+      },
+      {
+        "font_id": "long-cang",
+        "target_log2_snr": -2,
+        "mean_delta_dice": 0.0018169424356281483
+      },
+      {
+        "font_id": "long-cang",
+        "target_log2_snr": -1,
+        "mean_delta_dice": -0.011869554628116213
+      },
+      {
+        "font_id": "long-cang",
+        "target_log2_snr": 0,
+        "mean_delta_dice": -0.016699031363749395
+      }
+    ]
+  },
+  "cpu_replay": {
+    "noise_bank_max_abs_diff": 0.0,
+    "noisy_examples_max_abs_diff": 6.885868835126985e-07,
+    "checkpoint_samples": 192,
+    "pixels_checked": 442368,
+    "saved_example_max_abs_x0_diff": 5.585742999947296e-05,
+    "threshold_tolerance": 0.0002,
+    "near_threshold_mask_flips": 1,
+    "max_abs_x0_at_flip": 1.0498075382821829e-07,
+    "first_replays_with_mask_flips": [
+      {
+        "method": "denoiser",
+        "width": 16,
+        "seed": 101,
+        "target_log2_snr": -5,
+        "font_id": "long-cang",
+        "class_id": 14,
+        "noise_id": 11,
+        "flipped_pixels": 1
+      }
+    ]
+  },
+  "artifact_sha256": {
+    "replay.npz": "be96ee2aec2f70ea18657c62a41bcb9a60c6e22049d38c21baeded2723d7e793",
+    "scores.csv": "37afab6b9a1e748b11f8946cb604f0b6edd07f1df1b91e8686e1ae66429851b4",
+    "scores.csv.gz": "f41b30820aad167ed75e58f94a28ce85445d04516f80902adec027cb0c248dcb",
+    "dataset_sha256": "a0f84add514c1f9088c9648d369436b675d1badee4a263379255258d300693dc",
+    "manifest_sha256": "d4fdd79acd9877f4c29f1c229d92169cc63a9b9848c14af22cd5372d3d753158",
+    "evaluator": "84859be831647888088c38e64f0055f9cd82c3bc01cc87fe7720feceb776eb15",
+    "summary.json": "f8fc24a2d4bdf67c56ee8c264b8faee32fd875bfcf522a2045d007b94f945842",
+    "runs.json": "e9ca229c845875c63bbb4eeb538852d1a276d976f18e556ad6006d4b21fe0bd8",
+    "w16-s101.pt": "996db99288173c768c08deae71ca22849cfe36cb6634f9c644c4d8d6a382b1c6",
+    "w16-s202.pt": "54e72791705b87fb07fb75973284441a3e084e169cba8b955ff1ee784a2f51e1",
+    "w32-s101.pt": "2cca4b0015ce7281c7d377c27247a448dca7c10e8fabc9254aeef762b8a17b0a",
+    "w32-s202.pt": "574438369dd0aaf0a103a72165ca1438d528b2dd2f3884021509803df9cc5f0d"
+  }
+}

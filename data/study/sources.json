@@ -1,0 +1,102 @@
+{
+  "unicode": {
+    "version": "17.0.0",
+    "source": "https://www.unicode.org/Public/17.0.0/ucd/Unihan.zip",
+    "documentation": "https://www.unicode.org/reports/tr38/tr38-39.html#kTotalStrokes",
+    "member": "Unihan_IRGSources.txt",
+    "property": "kTotalStrokes",
+    "sha256": "f7a48b2b545acfaa77b2d607ae28747404ce02baefee16396c5d2d7a8ef34b5e"
+  },
+  "characters_by_stroke_count": {
+    "4": "水火心木中云",
+    "6": "安字光年好同",
+    "8": "国明和林雨学",
+    "10": "笑家高海校真"
+  },
+  "fonts": [
+    {
+      "font_id": "noto-sans-cjk-sc",
+      "family": "Noto Sans CJK SC",
+      "split": "train",
+      "lineage": "source-han-sans",
+      "lineage_evidence": "https://github.com/adobe-fonts/source-han-sans/blob/2.004R/README.md",
+      "designer": "Adobe, Google and CJK design partners",
+      "revision": "Sans2.004 / 523d033d6cb47f4a80c58a35753646f5c3608a78",
+      "source": "https://raw.githubusercontent.com/notofonts/noto-cjk/523d033d6cb47f4a80c58a35753646f5c3608a78/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+      "license": "OFL-1.1",
+      "license_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/523d033d6cb47f4a80c58a35753646f5c3608a78/LICENSE",
+      "license_sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "font_id": "zcool-xiaowei",
+      "family": "ZCOOL XiaoWei",
+      "split": "train",
+      "lineage": "zcool-xiaowei",
+      "lineage_evidence": "https://github.com/google/fonts/blob/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolxiaowei/DESCRIPTION.en_us.html",
+      "designer": "Li Dawei and Zuozi",
+      "revision": "google/fonts 7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "source": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolxiaowei/ZCOOLXiaoWei-Regular.ttf",
+      "sha256": "a42b620140f493db42f741351dfbf343c0936d58588ee8004b8b2a218d997ff1",
+      "license": "OFL-1.1",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolxiaowei/OFL.txt",
+      "license_sha256": "a094514ca57cf8f9c5e8d8d1adab5d8cd3a377297ff016f9df2c05b3ecd77f0a"
+    },
+    {
+      "font_id": "ma-shan-zheng",
+      "family": "Ma Shan Zheng",
+      "split": "train",
+      "lineage": "ma-shan-zheng",
+      "lineage_evidence": "https://github.com/google/fonts/blob/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/mashanzheng/METADATA.pb",
+      "designer": "Ma Shan Zheng",
+      "revision": "google/fonts 7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "source": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/mashanzheng/MaShanZheng-Regular.ttf",
+      "sha256": "6d2546bb189c732a8ca29af9e22457b152387d158aa459e4ac2ce1e51788b7fb",
+      "license": "OFL-1.1",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/mashanzheng/OFL.txt",
+      "license_sha256": "d7bdb1cee215b689e23c2f95672a6084c790542170648267a55114103d756a08"
+    },
+    {
+      "font_id": "zcool-qingke-huangyou",
+      "family": "ZCOOL QingKe HuangYou",
+      "split": "val",
+      "lineage": "zcool-qingke-huangyou",
+      "lineage_evidence": "https://github.com/google/fonts/blob/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolqingkehuangyou/DESCRIPTION.en_us.html",
+      "designer": "Zheng Qingke",
+      "revision": "google/fonts 7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "source": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolqingkehuangyou/ZCOOLQingKeHuangYou-Regular.ttf",
+      "sha256": "54f0c0df4308cd74cd0f2fd3494ae054dbc4a1fd6fa7d71f4807eb4cdd8b4136",
+      "license": "OFL-1.1",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolqingkehuangyou/OFL.txt",
+      "license_sha256": "f1bce31b817dee01c1e4ef8bc45d8ecb95f01f4abbf0a985007cb3cd0fd8123d"
+    },
+    {
+      "font_id": "zcool-kuaile",
+      "family": "ZCOOL KuaiLe",
+      "split": "test",
+      "lineage": "liu-bingke-kuaile-display",
+      "lineage_evidence": "https://github.com/google/fonts/blob/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolkuaile/DESCRIPTION.en_us.html",
+      "designer": "Liu Bingke, Yang Kang, Wu Shaojie and design trainees",
+      "revision": "google/fonts 7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "source": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolkuaile/ZCOOLKuaiLe-Regular.ttf",
+      "sha256": "812a6fc1fe54b6d73a419245c32dfeba8aa33104d5be90d1cf6af082007cb71d",
+      "license": "OFL-1.1",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/zcoolkuaile/OFL.txt",
+      "license_sha256": "538078469839b4a2e7ad22bef4ebe41681a4e53749bb2a072144024f1d6d703d"
+    },
+    {
+      "font_id": "long-cang",
+      "family": "Long Cang",
+      "split": "test",
+      "lineage": "long-cang",
+      "lineage_evidence": "https://github.com/google/fonts/blob/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/longcang/DESCRIPTION.en_us.html",
+      "designer": "Chen Xiaomin",
+      "revision": "google/fonts 7af0d90b4d532ffa4b041937b560c6df4e7b1e95",
+      "source": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/longcang/LongCang-Regular.ttf",
+      "sha256": "e5bf2c3f24ef2327c6f136d8f73e2f9dfdf44896fdbeb35a9515f44777bb91bc",
+      "license": "OFL-1.1",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/7af0d90b4d532ffa4b041937b560c6df4e7b1e95/ofl/longcang/OFL.txt",
+      "license_sha256": "603546b7219a94bb59bf8294458194a5010119486354092b66a09a3fd61aeacc"
+    }
+  ]
+}

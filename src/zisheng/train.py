@@ -59,12 +59,17 @@ def training_step(
     optimizer: torch.optim.Optimizer,
     model: torch.nn.Module,
     diffusion: GaussianDiffusion,
+    *,
+    timesteps: torch.Tensor | None = None,
+    noise: torch.Tensor | None = None,
 ) -> float:
     """Do one optimizer update and return its scalar noise-prediction loss."""
 
     clean_images, character_ids = batch
     optimizer.zero_grad(set_to_none=True)
-    loss = diffusion.training_loss(model, clean_images, character_ids)
+    loss = diffusion.training_loss(
+        model, clean_images, character_ids, timesteps=timesteps, noise=noise
+    )
     loss.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
     optimizer.step()
