@@ -6,7 +6,7 @@
 \input{generated/numbers.tex}
 \input{generated/primary-rows.tex}
 
-\title{\textbf{Local Edge Entropy and Source Recovery in Chinese Glyph Denoising}}
+\title{\vspace{-1em}\textbf{Local Edge Entropy and Source Recovery in Chinese Glyph Denoising}}
 \author{Rain Piao\\[-2pt]\small UCLA STATS 100A Honors}
 \date{November 18, 2026}
 
@@ -14,17 +14,22 @@
 \maketitle
 
 \begin{abstract}
-Two images can show the same Chinese character with different stroke shapes. If we give a diffusion model the right label and a noisy version of one image, how much of that particular shape can it recover? We study 24 characters in six fonts and reserve two fonts for testing. As noise decreases, predictions match their own source font more closely. The wider model places ink more accurately at the strongest noise level, and the narrower model scores higher at the mildest. Local edge entropy, which measures the variety of small patterns along a character's edges, slightly improves predictions of which characters are easier to recover.
+A restored character can be easy to read while losing the shape of its original strokes. We test recovery with a known label on 24 Chinese characters in two held-out fonts. The models follow their original inputs more closely as noise decreases. A measure of edge variety slightly improves predictions of which glyphs are harder to recover. The wider model does better at the strongest noise and worse at the mildest. Both the original image and the noise level matter when judging recovery.
 \end{abstract}
 
-\section{Start with two versions of the same character}
+\section{Why recover the original glyph?}
 
-The two rows in Figure~\ref{fig:example} both show \emph{ming}, the character for \emph{bright}. The top one has heavier strokes. The bottom one looks handwritten. In each row we take the original image, add known noise, and ask the model to estimate the clean image. The model knows the character label in both rows. Under less noise, the two estimates keep more of the differences between the originals. The last column simply averages three training images of the same character. It looks the same in both rows.
+Imagine cleaning up a scan. A thin, handwritten-looking \emph{ming} might come back as a bold \emph{ming}. Both versions are readable. To preserve the lettering of the scan, we need to recover where the original ink was. In Figure~\ref{fig:example} we add noise to two clean font renderings and give both rows the same label.
+
+\smallskip
+\noindent\textbf{Source.} Does each prediction preserve the strokes of its own input?\\
+\textbf{Difficulty.} Does edge variety help predict recovery beyond stroke count and ink geometry?\\
+\textbf{Width.} At which noise levels does extra width help with the same training examples and updates?
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\linewidth]{generated/illustration.png}
-\caption{Read each row from the original to the noisy input and the model's one-step recovery. The noise settings are target \(\log_2\mathrm{SNR}=-5\) and 0. We fixed the character, width 32, training seed 101, and noise draw 0 before test scoring. The scores later in the paper use all 24 characters.}
+\includegraphics[width=.98\linewidth]{generated/illustration.png}
+\caption{Two renderings of \emph{ming} (\emph{bright}). The label-only template is the same in both rows. We fixed this example, model width 32, seed 101, and noise draw 0 before testing. Results use all 24 characters.}
 \label{fig:example}
 \end{figure}
 
@@ -91,7 +96,7 @@ Test font & Width & MAE without \(H\) & MAE with \(H\) & Drop in MAE \\
 \clearpage
 \section{What we saw}
 
-\textbf{Entropy helped a little.} Average error fell from \(\MeanControl\) to \(\MeanExpanded\) Dice points, with a drop in all four settings (Table~\ref{tab:entropy}). Removing one character and repeating the calculation gave improvements from \(\DeleteLow\) to \(\DeleteHigh\) points. This shows how much the result depends on the characters we chose. Across training fonts, entropy rank correlations (Spearman) were \(\EntropyRankLow\) to \(\EntropyRankHigh\).
+\textbf{Edge variety offers a small clue about difficulty.} Adding entropy reduced average prediction error from \(\MeanControl\) to \(\MeanExpanded\) Dice points (Table~\ref{tab:entropy}). Dropping one character gave improvements of \(\DeleteLow\) to \(\DeleteHigh\) points. Entropy ranks varied by training font (Spearman \(\EntropyRankLow\) to \(\EntropyRankHigh\)). The small gain gives us a reason to test this feature when choosing glyphs for a broader benchmark.
 
 \begin{figure}[ht]
 \centering
@@ -100,12 +105,12 @@ Test font & Width & MAE without \(H\) & MAE with \(H\) & Drop in MAE \\
 \label{fig:curves}
 \end{figure}
 
-\textbf{The width comparison changes with noise.} On the same corrupted images, wide minus narrow was \(\WidthLow\) Dice points at the strongest noise and \(\WidthHigh\) at the mildest. The average was \(\MeanWidthGain\). In a descriptive regression of that gain, one standard deviation of entropy corresponded to \(\WidthEntropySlope\) points after adjusting for the other predictors.
+\textbf{The average hides where extra width helps.} Wide minus narrow averaged \(\MeanWidthGain\) Dice points. It was \(\WidthLow\) at the strongest noise and \(\WidthHigh\) at the mildest. In a descriptive fit, one standard deviation of entropy corresponded to \(\WidthEntropySlope\) points in width gain after adjustment.
 
-\textbf{The input carries useful shape details.} As noise decreased, \(S\) rose from \(\SourceNarrowLow\) to \(\SourceNarrowHigh\) points for width 16 and from \(\SourceWideLow\) to \(\SourceWideHigh\) for width 32. The nearest template rose from \(\SourceNearestLow\) to \(\SourceNearestHigh\). The label-only baseline had zero \(S\) and \(\DiceLabelLow\) Dice points of overlap.
+\textbf{Ordinary overlap can credit a generic shape.} The label-only template had \(\DiceLabelLow\) Dice points and zero own-source advantage \(S\). As noise decreased, \(S\) rose from \(\SourceNarrowLow\) to \(\SourceNarrowHigh\) points for width 16 and from \(\SourceWideLow\) to \(\SourceWideHigh\) for width 32. The nearest template rose from \(\SourceNearestLow\) to \(\SourceNearestHigh\).
 
 \paragraph{Scope and reproduction.}
-These results describe 24 known labels in two test fonts with two seeds per width. Legibility and model-size scaling require their own experiments. The \href{https://github.com/Rainnnee/zisheng/tree/codex/glyph-entropy-study/report/glyph-entropy}{study folder} links to the code, data, audit, and learning notes.
+Our evidence comes from 24 known labels in two test fonts with two seeds per width. Applying it to scans, legibility, or model-size scaling would need separate tests. The \href{https://github.com/Rainnnee/zisheng/tree/codex/glyph-entropy-study/report/glyph-entropy}{study folder} links to the code, data, audit, and learning notes.
 
 {\small
 \bibliographystyle{unsrt}

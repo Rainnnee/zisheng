@@ -6,7 +6,7 @@
 
 ## Research study
 
-Does local edge entropy improve predictions of how well a diffusion model restores a glyph in an unseen font? The expanded model lowered held-out-character prediction error by **0.144 Dice points** on average. In the width comparison, width 32 scored **3.22 points higher** at the strongest noise level and **1.71 points lower** at the mildest. A crossed-font comparison quantifies how recovery follows its source when the correct character label is already known.
+A character can remain readable after its original stroke shapes have changed. We give the denoiser the right label and test whether it recovers those shapes from the noisy image. We also ask which glyphs are harder to recover and when extra model width helps. Local edge entropy lowered held-out-character prediction error by **0.144 Dice points** on average. Width 32 scored **3.22 points higher** at the strongest noise level and **1.71 points lower** at the mildest.
 
 [Short paper](report/glyph-entropy/paper.pdf) · [LaTeX](report/glyph-entropy/paper.tex) · [中文学习笔记](report/glyph-entropy/learning-notes.zh-CN.md) · [Data and split](data/study/) · [Models](models/glyph-entropy-v1/) · [Scores and audit](results/glyph-entropy-v1/) · [AI agent workflow](docs/agent-matrix.md)
 
